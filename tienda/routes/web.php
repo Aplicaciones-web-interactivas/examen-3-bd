@@ -6,6 +6,7 @@ use App\Livewire\Settings\Profile;
 use App\Livewire\Settings\TwoFactor;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
+use App\Http\Controllers\ProductoController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -32,4 +33,12 @@ Route::middleware(['auth'])->group(function () {
             ),
         )
         ->name('two-factor.show');
+        
+    //Rutas para Producto
+    Route::get('productos', [ProductoController::class, 'index'])->name('productos.index');
+    Route::get('productos/{id}', [ProductoController::class, 'show'])->name('productos.show');
+    Route::post('productos', [ProductoController::class, 'store'])->name('productos.store');
+    Route::put('productos/{id}', [ProductoController::class, 'update'])->name('productos.update');
+    Route::delete('productos/{id}', [ProductoController::class, 'destroy'])->name('productos.destroy');
+
 });
