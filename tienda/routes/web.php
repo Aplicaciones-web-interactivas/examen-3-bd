@@ -8,6 +8,8 @@ use App\Livewire\Settings\TwoFactor;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 use App\Http\Controllers\ProductoController;
+use App\Http\Controllers\DescuentoController;
+use App\Http\Controllers\ImagenController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -53,5 +55,21 @@ Route::middleware(['auth'])->group(function () {
     Route::post('productos', [ProductoController::class, 'store'])->name('productos.store');
     Route::put('productos/{id}', [ProductoController::class, 'update'])->name('productos.update');
     Route::delete('productos/{id}', [ProductoController::class, 'destroy'])->name('productos.destroy');
+
+        // Rutas para Descuentos
+    Route::get('descuentos', [DescuentoController::class, 'index'])->name('descuentos.index');
+    Route::get('descuentos/create', [DescuentoController::class, 'create'])->name('descuentos.create');
+    Route::post('descuentos', [DescuentoController::class, 'store'])->name('descuentos.store');
+    Route::get('descuentos/{id}/edit', [DescuentoController::class, 'edit'])->name('descuentos.edit');
+    Route::put('descuentos/{id}', [DescuentoController::class, 'update'])->name('descuentos.update');
+    Route::delete('descuentos/{id}', [DescuentoController::class, 'destroy'])->name('descuentos.destroy');
+
+    // Rutas para Imágenes
+    Route::get('imagenes', [ImagenController::class, 'index'])->name('imagenes.index');
+    Route::get('imagenes/create', [ImagenController::class, 'create'])->name('imagenes.create');
+    Route::post('imagenes', [ImagenController::class, 'store'])->name('imagenes.store');
+    Route::get('imagenes/{id}/edit', [ImagenController::class, 'edit'])->name('imagenes.edit');
+    Route::put('imagenes/{id}', [ImagenController::class, 'update'])->name('imagenes.update');
+    Route::delete('imagenes/{id}', [ImagenController::class, 'destroy'])->name('imagenes.destroy');
 
 });
