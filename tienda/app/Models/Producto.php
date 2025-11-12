@@ -9,17 +9,40 @@ class Producto extends Model
 {
     use SoftDeletes;
 
-    protected $table = 'productos';
-
-    protected $primaryKey = 'id_producto';
-
     protected $fillable = [
         'nombre',
         'descripcion',
         'precio',
-        'id_imagen',
-        'id_descuento',
+        'imagen_id',
+        'descuento_id',
         'stock',
     ];
 
+    public function imagen()
+    {
+        return $this->belongsTo(Imagen::class);
+    }
+
+    public function descuento()
+    {
+        return $this->belongsTo(Descuento::class);
+    }
+
+    public function detallesCarrito()
+    {
+        return $this->hasMany(DetalleCarrito::class);
+    }
+
+    public function detallesCompra()
+    {
+        return $this->hasMany(DetalleCompra::class);
+    }
+
+    public function getPrecioFinalAttribute()
+    {
+        if ($this->descuento && $this->descuento->estaActivo()) {
+            return $this->precio * (1 - $this->descuento->porcentaje / 100);
+        }
+        return $this->precio;
+    }
 }

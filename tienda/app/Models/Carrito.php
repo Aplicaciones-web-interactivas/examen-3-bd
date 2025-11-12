@@ -9,13 +9,26 @@ class Carrito extends Model
 {
     use SoftDeletes;
 
-    protected $table = 'carritos';
-
-    protected $primaryKey = 'id_carrito';
-
     protected $fillable = [
-        'id_usuario',
+        'user_id',
         'total',
     ];
 
+    
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    
+    public function detalles()
+    {
+        return $this->hasMany(DetalleCarrito::class);
+    }
+
+    
+    public function compras()
+    {
+        return $this->hasMany(Compra::class);
+    }
 }

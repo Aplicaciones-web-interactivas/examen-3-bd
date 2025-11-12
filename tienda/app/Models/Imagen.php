@@ -9,12 +9,13 @@ class Imagen extends Model
 {
     use SoftDeletes;
 
-    protected $table = 'imagenes';
-
-    protected $primaryKey = 'id_imagen';
-
     protected $fillable = [
         'nombre',
         'imagen_url',
     ];
+
+    public function productos()
+    {
+        return $this->hasMany(Producto::class);
+    }
 }
