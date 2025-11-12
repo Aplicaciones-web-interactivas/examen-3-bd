@@ -12,10 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('imagenes', function (Blueprint $table) {
-            $table->id('id_imagen');
+        $table->id();
             $table->string('nombre');
             $table->string('imagen_url');
+
             $table->softDeletes();
+
             $table->timestamps();
         });
     }

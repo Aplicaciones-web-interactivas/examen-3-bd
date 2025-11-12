@@ -17,6 +17,10 @@
                 </flux:navlist.group>
             </flux:navlist>
 
+           <flux:navlist.item icon="shopping-cart" :href="route('productos.index')" :current="request()->routeIs('productos.*')">
+            {{ __('Productos') }}
+            </flux:navlist.item>
+
             <flux:spacer />
 
             <flux:navlist variant="outline">
