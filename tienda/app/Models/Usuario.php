@@ -2,29 +2,33 @@
 
 namespace App\Models;
 
-//----------Utilizar Usuario en lugar de User--------------
-
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use Laravel\Fortify\TwoFactorAuthenticatable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class User extends Authenticatable
+class Usuario extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, TwoFactorAuthenticatable;
+    use HasFactory, Notifiable, TwoFactorAuthenticatable, SoftDeletes;
 
+    protected $table = 'usuarios';
+    protected $primaryKey = 'id_usuario';
     /**
      * The attributes that are mass assignable.
      *
      * @var list<string>
      */
     protected $fillable = [
-        'name',
-        'email',
-        'password',
+        'nombre',
+        'apellido',
+        'correo',
+        'contraseña',
+        'id_descuento',
+        'rol'
     ];
 
     /**
