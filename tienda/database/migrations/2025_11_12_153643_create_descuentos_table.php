@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('descuentos', function (Blueprint $table) {
-            $table->id('id_descuento');
+            $table->id();
             $table->double('porcentaje');
             $table->date('fecha_inicio');
             $table->date('fecha_fin');
