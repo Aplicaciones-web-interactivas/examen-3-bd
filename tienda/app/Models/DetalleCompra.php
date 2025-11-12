@@ -9,14 +9,22 @@ class DetalleCompra extends Model
 {
     use SoftDeletes;
 
-    protected $table = 'detalle_compra';
-
-    protected $primaryKey = 'id_detalle';
-
     protected $fillable = [
-        'id_compra',
-        'id_producto',
+        'compra_id',
+        'producto_id',
         'cantidad',
         'subtotal',
     ];
+
+
+    public function compra()
+    {
+        return $this->belongsTo(Compra::class);
+    }
+
+
+    public function producto()
+    {
+        return $this->belongsTo(Producto::class);
+    }
 }

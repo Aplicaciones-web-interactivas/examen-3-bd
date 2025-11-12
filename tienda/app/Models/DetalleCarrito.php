@@ -9,14 +9,21 @@ class DetalleCarrito extends Model
 {
     use SoftDeletes;
 
-    protected $table = 'detalle_carrito';
-
-    protected $primaryKey = 'id_detalle_carrito';
-
     protected $fillable = [
-        'id_carrito',
-        'id_producto',
+        'carrito_id',
+        'producto_id',
         'cantidad',
         'subtotal',
     ];
+
+    public function carrito()
+    {
+        return $this->belongsTo(Carrito::class);
+    }
+
+
+    public function producto()
+    {
+        return $this->belongsTo(Producto::class);
+    }
 }

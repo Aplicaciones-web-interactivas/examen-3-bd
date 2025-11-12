@@ -16,13 +16,10 @@ return new class extends Migration
             $table->string('nombre');
             $table->text('descripcion')->nullable();
             $table->double('precio');
-            $table->unsignedBigInteger('id_imagen');
-            $table->unsignedBigInteger('id_descuento');
+            $table->foreignId('imagen_id')->constrained('imagenes')->onDelete('cascade');
+            $table->foreignId('descuento_id')->constrained('descuentos')->onDelete('cascade');
             $table->integer('stock');
-
-            $table->foreign('id_imagen')->references('id')->on('imagenes');
-            $table->foreign('id_descuento')->references('id')->on('descuentos');
-
+            $table->softDeletes();
             $table->timestamps();
         });
     }
