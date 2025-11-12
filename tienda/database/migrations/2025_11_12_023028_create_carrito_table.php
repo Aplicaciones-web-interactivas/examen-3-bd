@@ -16,7 +16,7 @@ return new class extends Migration
             $table->id('id_carrito');
             $table->unsignedBigInteger('id_usuario');
             $table->double('total');
-            $table->foreign('id_usuario')->references('id')->on('usuarios');
+            $table->foreign('id_usuario')->references('id_usuario')->on('usuarios');
             $table->SoftDeletes();
             $table->timestamps();
         });
