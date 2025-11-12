@@ -21,9 +21,7 @@ return new class extends Migration
             $table->integer('stock');
 
             $table->foreign('id_imagen')->references('id')->on('imagenes');
-
-            //Todavia no crean la tabla de descuentos por eso esta comentada esta linea
-            //$table->foreign('id_descuento')->references('id')->on('descuentos');
+            $table->foreign('id_descuento')->references('id')->on('descuentos');
 
             $table->timestamps();
         });
