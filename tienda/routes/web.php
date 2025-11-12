@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\OrderController;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
@@ -32,4 +33,16 @@ Route::middleware(['auth'])->group(function () {
             ),
         )
         ->name('two-factor.show');
+
+    // Orders routes - Cliente
+    Route::prefix('orders')->name('orders.')->group(function () {
+        Route::get('/', [OrderController::class, 'index'])->name('index');
+        Route::post('/checkout', [OrderController::class, 'checkout'])->name('checkout');
+        Route::get('/{id}', [OrderController::class, 'show'])->name('show');
+    });
+
+    // Orders routes - Administrador
+    Route::prefix('admin')->name('admin.')->group(function () {
+        Route::get('/finanzas', [OrderController::class, 'finanza'])->name('finanzas');
+    });
 });

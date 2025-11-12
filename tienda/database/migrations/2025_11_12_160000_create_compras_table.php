@@ -12,14 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('compras', function (Blueprint $table) {
-            $table->id('id_compra');
-            $table->unsignedBigInteger('id_carrito_origen');
-            $table->unsignedBigInteger('id_usuario');
+            $table->id();
+            $table->foreignId('carrito_id')->constrained('carritos')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->double('total');
             $table->dateTime('fecha_compra');
-            $table->foreign('id_carrito_origen')->references('id_carrito')->on('carrito');
-            $table->foreign('id_usuario')->references('id_usuario')->on('usuarios');
-            $table->SoftDeletes();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
