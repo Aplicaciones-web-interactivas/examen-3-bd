@@ -35,6 +35,21 @@
                 >
                     {{ __('Productos') }}
                 </flux:navbar.item>
+
+                @auth
+                    @if(auth()->user()->rol === 'admin')
+                        <flux:navbar.item
+                            class="!text-[#4472CA] text-2xl font-semibold flex items-center gap-3 [&_svg]:size-7"
+                            icon="users"
+                            :href="route('usuarios.index')"
+                            :current="request()->routeIs('usuarios.*')"
+                            wire:navigate
+                        >
+                            {{ __('Gestión de Usuarios') }}
+                        </flux:navbar.item>
+                    @endif
+                @endauth
+
             </flux:navbar>
 
             <flux:spacer />
@@ -115,6 +130,19 @@
                 >
                     {{ __('Productos') }}
                 </flux:navlist.item>
+                    @auth
+                        @if(auth()->user()->rol === 'admin')
+                            <flux:navlist.item
+                                class="!text-[#4472CA] text-2xl font-semibold [&_svg]:size-7"
+                                icon="users"
+                                :href="route('usuarios.index')"
+                                :current="request()->routeIs('usuarios.*')"
+                                wire:navigate
+                            >
+                                {{ __('Gestión de Usuarios') }}
+                            </flux:navlist.item>
+                        @endif
+                    @endauth
             </flux:navlist>
 
             <flux:spacer />
