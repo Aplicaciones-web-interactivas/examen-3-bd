@@ -11,6 +11,7 @@ use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\DescuentoController;
 use App\Http\Controllers\ImagenController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\CartController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -43,6 +44,16 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/', [OrderController::class, 'index'])->name('index');
         Route::post('/checkout', [OrderController::class, 'checkout'])->name('checkout');
         Route::get('/{id}', [OrderController::class, 'show'])->name('show');
+    });
+
+    // Cart routes - Cliente
+    Route::prefix('cart')->name('cart.')->group(function () {
+        Route::get('/', [CartController::class, 'getCart'])->name('get');
+        Route::post('/add', [CartController::class, 'addItem'])->name('add');
+        Route::put('/item/{id}', [CartController::class, 'updateItem'])->name('update');
+        Route::delete('/item/{id}', [CartController::class, 'removeItem'])->name('remove');
+        Route::delete('/clear', [CartController::class, 'clearCart'])->name('clear');
+        Route::get('/preview', [CartController::class, 'checkoutPreview'])->name('preview');
     });
 
     // Orders routes - Administrador

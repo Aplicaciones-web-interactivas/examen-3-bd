@@ -11,7 +11,12 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use App\Models\Carrito;
 
+/**
+ * @property-read Carrito|null $carrito Relación 1:1 con el carrito del usuario
+ */
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
@@ -63,5 +68,13 @@ class User extends Authenticatable
             ->take(2)
             ->map(fn ($word) => Str::substr($word, 0, 1))
             ->implode('');
+    }
+
+    /**
+     * Get the user's cart
+     */
+    public function carrito(): HasOne
+    {
+        return $this->hasOne(Carrito::class);
     }
 }
