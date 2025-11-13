@@ -51,7 +51,7 @@
                 @endauth
 
                  <flux:navlist.item
-                class="!text-[#4472CA] text-2xl font-semibold items-center gap-3 [&_svg]:size-7"
+                class="!text-white text-2xl font-semibold items-center gap-3 [&_svg]:size-7"
                 icon="percent-badge" 
                 :href="route('productos.descuento')"
                 :current="request()->routeIs('productos.descuento')"
@@ -171,7 +171,7 @@
                         @endif
                     @endauth
             <flux:navlist.item
-                class="!text-[#4472CA] text-2xl font-semibold [&_svg]:size-7"
+                class="!text-red-600 text-2xl font-semibold [&_svg]:size-7"
                 icon="percent-badge" 
                 :href="route('productos.descuento')"
                 :current="request()->routeIs('productos.descuento')"
