@@ -61,17 +61,14 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/preview', [CartController::class, 'checkoutPreview'])->name('preview');
     });
 
-    // Orders routes - Administrador
-    Route::prefix('admin')->name('admin.')->group(function () {
-        Route::get('/finanzas', [OrderController::class, 'finanza'])->name('finanzas');
-    });
-        
+
     //Rutas para Producto
     Route::get('productos', [ProductoController::class, 'index'])->name('productos.index');
     Route::get('productos/{id}', [ProductoController::class, 'show'])->name('productos.show');
     Route::post('productos', [ProductoController::class, 'store'])->name('productos.store');
     Route::put('productos/{id}', [ProductoController::class, 'update'])->name('productos.update');
     Route::delete('productos/{id}', [ProductoController::class, 'destroy'])->name('productos.destroy');
+    Route::post('productos/import', [ProductoController::class, 'import'])->name('productos.import');
 
         // Rutas para Descuentos
     Route::get('descuentos', [DescuentoController::class, 'index'])->name('descuentos.index');
@@ -88,7 +85,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('imagenes/{id}/edit', [ImagenController::class, 'edit'])->name('imagenes.edit');
     Route::put('imagenes/{id}', [ImagenController::class, 'update'])->name('imagenes.update');
     Route::delete('imagenes/{id}', [ImagenController::class, 'destroy'])->name('imagenes.destroy');
-    
+
     // Rutas para la gestión de usuarios (solo para administradores)
     // AGREGAR AQUI TODAS LAS RUTAS A LAS QUE SOLO PUEDAN ACCEDER LOS ADMINISTRADORES
     Route::middleware(['auth', 'admin'])->group(function () {
@@ -98,6 +95,11 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/usuarios/{id}/editar', [UserController::class, 'edit'])->name('usuarios.edit');
         Route::put('/usuarios/{id}', [UserController::class, 'update'])->name('usuarios.update');
         Route::delete('/usuarios/{id}', [UserController::class, 'destroy'])->name('usuarios.destroy');
+    });
+
+     // Orders routes - Administrador
+    Route::prefix('admin')->middleware('admin')->name('admin.')->group(function () {
+        Route::get('/finanzas', [OrderController::class, 'finanza'])->name('finanzas');
     });
 
 });
