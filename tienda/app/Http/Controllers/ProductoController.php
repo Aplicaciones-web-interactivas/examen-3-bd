@@ -148,4 +148,20 @@ class ProductoController extends Controller
 
         return view('productos-admin', compact('productos','imagenes','descuentos'));
     }
+
+    public function productosEnDescuento()
+    {
+    $hoy = now()->toDateString();
+    // Productos con descuento activo
+    $productos = Producto::whereHas('descuento', function ($q) use ($hoy) {
+            $q->whereDate('fecha_inicio', '<=', $hoy)
+              ->whereDate('fecha_fin', '>=', $hoy);
+        })
+        ->with('descuento', 'imagen')
+        ->paginate(12);
+
+    return view('descuentos', compact('productos'));
+    }
+
+
 }
