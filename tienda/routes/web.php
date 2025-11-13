@@ -61,11 +61,14 @@ Route::middleware(['auth'])->group(function () {
     //Rutas para Producto
     Route::get('productos', [ProductoController::class, 'index'])->name('productos.index');
     Route::get('productos/{id}', [ProductoController::class, 'show'])->name('productos.show');
-    Route::post('productos', [ProductoController::class, 'store'])->name('productos.store');
+
+    // Solo admin puede crear/editar/eliminar/importar productos
+    Route::middleware('admin')->group(function () {
+        Route::post('productos', [ProductoController::class, 'store'])->name('productos.store');
     Route::put('productos/{id}', [ProductoController::class, 'update'])->name('productos.update');
     Route::delete('productos/{id}', [ProductoController::class, 'destroy'])->name('productos.destroy');
     Route::post('productos/import', [ProductoController::class, 'import'])->name('productos.import');
-
+});
         // Rutas para Descuentos
     Route::get('descuentos', [DescuentoController::class, 'index'])->name('descuentos.index');
     Route::get('descuentos/create', [DescuentoController::class, 'create'])->name('descuentos.create');

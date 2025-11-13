@@ -8,6 +8,11 @@
 
 <h1>Productos</h1>
 
+@php
+  // Coincide con el middleware: Auth::user()->rol === 'admin'
+  $esAdmin = auth()->check() && data_get(auth()->user(), 'rol') === 'admin';
+@endphp
+
 @if (session('status'))
   <div>{{ session('status') }}</div>
 @endif
@@ -33,6 +38,8 @@
 
 <hr>
 
+{{-- Crear producto (solo admin) --}}
+@if($esAdmin)
 <form method="POST" action="{{ route('productos.store') }}">
   @csrf
   <h3>Crear producto</h3>
@@ -85,6 +92,7 @@
 
   <button type="submit">Guardar</button>
 </form>
+@endif
 
 <hr>
 
@@ -103,8 +111,10 @@
         <th>Imagen</th>
         <th>Descuento</th>
         <th>Stock</th>
-        <th>Actualizar</th>
-        <th>Eliminar</th>
+        @if($esAdmin)
+          <th>Actualizar</th>
+          <th>Eliminar</th>
+        @endif
       </tr>
     </thead>
     <tbody>
@@ -114,9 +124,7 @@
           <td>{{ $p->nombre }}</td>
           <td>{{ $p->descripcion }}</td>
           <td>{{ $p->precio }}</td>
-          <td>
-            {{ optional($p->imagen)->nombre ?? '—' }}
-          </td>
+          <td>{{ optional($p->imagen)->nombre ?? '—' }}</td>
           <td>
             @if($p->descuento && !is_null($p->descuento->porcentaje))
               {{ $p->descuento->porcentaje }}%
@@ -125,6 +133,8 @@
             @endif
           </td>
           <td>{{ $p->stock }}</td>
+
+          @if($esAdmin)
           <td>
             <form method="POST" action="{{ route('productos.update', $p->id) }}">
               @csrf
@@ -166,13 +176,16 @@
               <button type="submit" onclick="return confirm('¿Eliminar?')">Eliminar</button>
             </form>
           </td>
+          @endif
+
         </tr>
       @endforeach
     </tbody>
   </table>
 @endif
 
-<!-- Import section -->
+{{-- Importar (solo admin) --}}
+@if($esAdmin)
 <div>
   <h3>Importar Productos desde Excel</h3>
   <form method="POST" action="{{ route('productos.import') }}" enctype="multipart/form-data">
@@ -183,6 +196,7 @@
     <button type="submit">Importar</button>
   </form>
 </div>
+@endif
 
 </body>
 </html>
