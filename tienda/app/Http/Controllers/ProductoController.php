@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Producto;
 use Illuminate\Http\Request;
 
+use App\Models\Imagen;
+use App\Models\Descuento;
+
 class ProductoController extends Controller
 {
     public function index(Request $request)
@@ -15,8 +18,10 @@ class ProductoController extends Controller
         } else { //si no lo encuientra te muestra todos 
             $productos = \App\Models\Producto::all();
         }
+        $imagenes = Imagen::select('id', 'nombre')->orderBy('id')->get();
+        $descuentos = Descuento::select('id','porcentaje')->orderBy('id')->get(); // porcentaje existe según tu modelo
 
-        return view('producto', compact('productos'));
+        return view('producto', compact('productos','imagenes','descuentos'));
     }
 
 
