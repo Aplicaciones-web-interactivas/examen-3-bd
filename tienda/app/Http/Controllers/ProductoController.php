@@ -18,16 +18,11 @@ class ProductoController extends Controller
 {
     public function index(Request $request)
     {
-        //este es in filtro para buscar por nombre
-        if ($request->filled('nombre')) {
-            $productos = \App\Models\Producto::where('nombre', 'like', '%'.$request->nombre.'%')->get();
-        } else { //si no lo encuientra te muestra todos
-            $productos = \App\Models\Producto::all();
-        }
-        $imagenes = Imagen::select('id', 'nombre')->orderBy('id')->get();
-        $descuentos = Descuento::select('id','porcentaje')->orderBy('id')->get();
+        $productos = Producto::paginate(9);
+        $imagenes=Imagen::all();
+        $descuentos=Descuento::all();
 
-        return view('producto', compact('productos','imagenes','descuentos'));
+        return view('productos-cliente', compact('productos','imagenes','descuentos'));
     }
 
     public function show($id)
@@ -148,4 +143,20 @@ class ProductoController extends Controller
 
         return view('productos-admin', compact('productos','imagenes','descuentos'));
     }
+
+    public function productosEnDescuento()
+    {
+    $hoy = now()->toDateString();
+    // Productos con descuento activo
+    $productos = Producto::whereHas('descuento', function ($q) use ($hoy) {
+            $q->whereDate('fecha_inicio', '<=', $hoy)
+              ->whereDate('fecha_fin', '>=', $hoy);
+        })
+        ->with('descuento', 'imagen')
+        ->paginate(12);
+
+    return view('descuentos', compact('productos'));
+    }
+
+
 }
