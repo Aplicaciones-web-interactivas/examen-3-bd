@@ -17,6 +17,11 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
+// Demo palette view for frontend team
+Route::get('/demo/palette', function () {
+    return view('demo.palette');
+})->name('demo.palette');
+
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
