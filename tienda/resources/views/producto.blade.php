@@ -172,5 +172,17 @@
   </table>
 @endif
 
+<!-- Import section -->
+<div>
+  <h3>Importar Productos desde Excel</h3>
+  <form method="POST" action="{{ route('productos.import') }}" enctype="multipart/form-data">
+    @csrf
+    <label>Archivo Excel:
+      <input type="file" name="file" accept=".xlsx, .xls, .csv">
+    </label>
+    <button type="submit">Importar</button>
+  </form>
+</div>
+
 </body>
 </html>
