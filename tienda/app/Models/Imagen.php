@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Imagen extends Model
 {
     use SoftDeletes;
+    
+    protected $table = 'imagenes';
 
     protected $fillable = [
         'nombre',
