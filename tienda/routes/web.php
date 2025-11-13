@@ -69,7 +69,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('productos/{id}', [ProductoController::class, 'destroy'])->name('productos.destroy');
     Route::post('productos/import', [ProductoController::class, 'import'])->name('productos.import');
 
-                // Rutas para Descuentos
+        // Rutas para Descuentos
         Route::get('descuentos', [DescuentoController::class, 'index'])->name('descuentos.index');
         Route::get('descuentos/create', [DescuentoController::class, 'create'])->name('descuentos.create');
         Route::post('descuentos', [DescuentoController::class, 'store'])->name('descuentos.store');
