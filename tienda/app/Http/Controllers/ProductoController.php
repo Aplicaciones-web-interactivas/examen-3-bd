@@ -18,16 +18,11 @@ class ProductoController extends Controller
 {
     public function index(Request $request)
     {
-        //este es in filtro para buscar por nombre
-        if ($request->filled('nombre')) {
-            $productos = \App\Models\Producto::where('nombre', 'like', '%'.$request->nombre.'%')->get();
-        } else { //si no lo encuientra te muestra todos
-            $productos = \App\Models\Producto::all();
-        }
-        $imagenes = Imagen::select('id', 'nombre')->orderBy('id')->get();
-        $descuentos = Descuento::select('id','porcentaje')->orderBy('id')->get();
+        $productos = Producto::paginate(9);
+        $imagenes=Imagen::all();
+        $descuentos=Descuento::all();
 
-        return view('producto', compact('productos','imagenes','descuentos'));
+        return view('productos-cliente', compact('productos','imagenes','descuentos'));
     }
 
 
