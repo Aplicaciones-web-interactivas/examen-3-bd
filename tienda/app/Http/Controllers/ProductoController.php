@@ -24,7 +24,6 @@ class ProductoController extends Controller
         return view('producto', compact('productos','imagenes','descuentos'));
     }
 
-
     public function show($id)
     {
         $producto = Producto::findOrFail($id);
