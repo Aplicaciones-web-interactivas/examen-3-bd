@@ -16,6 +16,7 @@ use App\Models\Carrito;
 
 /**
  * @property-read Carrito|null $carrito Relación 1:1 con el carrito del usuario
+ * @property-read bool $is_admin Verifica si el usuario es administrador
  */
 class User extends Authenticatable
 {
@@ -29,8 +30,11 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        "apellido",
         'email',
         'password',
+        'id_descuento',
+        'rol'
     ];
 
     /**
@@ -68,6 +72,14 @@ class User extends Authenticatable
             ->take(2)
             ->map(fn ($word) => Str::substr($word, 0, 1))
             ->implode('');
+    }
+
+    /**
+     * Check if user is admin
+     */
+    public function getIsAdminAttribute(): bool
+    {
+        return $this->rol === 'admin';
     }
 
     /**

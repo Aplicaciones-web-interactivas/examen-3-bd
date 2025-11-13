@@ -18,7 +18,15 @@
                 autocomplete="name"
                 :placeholder="__('Full name')"
             />
-
+            <flux:input
+                name="apellido"
+                :label="__('Last Name')"
+                type="text"
+                required
+                autofocus
+                autocomplete="name"
+                :placeholder="__('Last name')"
+            />
             <!-- Email Address -->
             <flux:input
                 name="email"
@@ -50,7 +58,19 @@
                 :placeholder="__('Confirm password')"
                 viewable
             />
-
+            <div>
+                <flux:label for="rol" :value="__('Role')" :label="__('Role')" />
+                <flux:select name="rol" id="rol" required
+                    class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
+                    
+                    <option value="cliente" {{ old('rol') == 'cliente' ? 'selected' : '' }}>Cliente</option>
+                    <option value="admin" {{ old('rol') == 'admin' ? 'selected' : '' }}>Administrador</option>
+                </flux:select>
+                {{-- Manejo de errores simple si no usas un componente --}}
+                @error('rol')
+                    <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                @enderror
+            </div>
             <div class="flex items-center justify-end">
                 <flux:button type="submit" variant="primary" class="w-full">
                     {{ __('Create account') }}
