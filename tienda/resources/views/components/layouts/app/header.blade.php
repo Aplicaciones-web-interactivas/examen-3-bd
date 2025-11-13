@@ -3,9 +3,9 @@
     <head>
         @include('partials.head')
     </head>
-    <body class="min-h-screen bg-white dark:bg-white" style="--color-accent-content: #4472CA;">
-        <flux:header container class="border-b border-zinc-200 py-4 items-center" style="background:var(--color-info);">
-            <flux:sidebar.toggle class="lg:hidden size-12 text-[#4472CA]" icon="bars-2" inset="left" />
+    <body class="min-h-screen bg-white dark:bg-white" style="--color-zinc-100: #f5f5f5;">
+        <flux:header container class="border-b border-zinc-200 bg-white dark:bg-white py-8">
+            <flux:sidebar.toggle class="lg:hidden size-12 text-[#f5f5f5]" icon="bars-2" inset="left" />
 
             <a href="{{ route('dashboard') }}" class="ms-2 me-5 flex items-center space-x-5 rtl:space-x-reverse lg:ms-0" wire:navigate>
                 <img
@@ -15,9 +15,9 @@
                 />
             </a>
 
-            <flux:navbar class="-mb-px max-lg:hidden gap-8 text-[#FFE66D] text-2xl font-semibold">
+            <flux:navbar class="-mb-px max-lg:hidden gap-8 text-[#4472CA] text-2xl font-semibold">
                 <flux:navbar.item
-                    class="!text-[#FFE66D] text-2xl font-semibold flex items-center gap-3 [&_svg]:size-7"
+                    class="!text-[#4472CA] text-2xl font-semibold flex items-center gap-3 [&_svg]:size-7"
                     icon="layout-grid"
                     :href="route('dashboard')"
                     :current="request()->routeIs('dashboard')"
@@ -27,7 +27,7 @@
                 </flux:navbar.item>
 
                 <flux:navbar.item
-                    class="!text-[#FFE66D] text-2xl font-semibold flex items-center gap-3 [&_svg]:size-7"
+                    class="!text-[#4472CA] text-2xl font-semibold flex items-center gap-3 [&_svg]:size-7"
                     icon="shopping-cart"
                     :href="route('productos.index')"
                     :current="request()->routeIs('productos.*')"
@@ -39,7 +39,7 @@
                 @auth
                     @if(auth()->user()->rol === 'admin')
                         <flux:navbar.item
-                            class="!text-[#FFE66D] text-2xl font-semibold flex items-center gap-3 [&_svg]:size-7"
+                            class="!text-[#4472CA] text-2xl font-semibold flex items-center gap-3 [&_svg]:size-7"
                             icon="users"
                             :href="route('usuarios.index')"
                             :current="request()->routeIs('usuarios.*')"
