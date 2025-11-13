@@ -1,136 +1,131 @@
 <x-layouts.app :title="__('Gestión de Usuarios')">
-    <div class="space-y-6">
-        
-        <!-- Encabezado con título y botón de crear -->
-        <div class="flex items-center justify-between">
+    <div class="space-y-4">
+        {{--Encabezado simple--}}
+        <div class="flex items-center justify-between border-b border-gray-200 pb-3 dark:border-gray-700">
             <div>
-                <h1 class="text-3xl font-bold text-text">Gestión de Usuarios</h1>
-                <p class="mt-1 text-gray-600 dark:text-gray-400">Administra todos los usuarios del sistema</p>
+                <h1 class="text-2xl font-semibold text-text">
+                    Gestión de Usuarios
+                </h1>
+                <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                    Lista de usuarios registrados en el sistema.
+                </p>
             </div>
-            <!-- Botón de crear nuevo usuario --> 
-            <a href="{{ route('usuarios.create') }}" class="flex items-center gap-2 rounded-lg bg-brand px-4 py-2 font-semibold text-white transition-all duration-200 hover:shadow-lg hover:brightness-110">
-                <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                </svg>
-                Nuevo Usuario
-            </a>
 
+            {{--Botón crear--}}
+            <a
+                href="{{ route('usuarios.create') }}"
+                class="inline-flex items-center gap-1 rounded-md border border-brand px-3 py-1.5 text-sm font-medium text-brand hover:bg-brand hover:text-white transition-colors"
+            >
+                + Nuevo
+            </a>
         </div>
 
-        <!-- Mensajes de estado -->
+        {{--Mensaje de estado--}}
         @if (session('success'))
-            <div class="rounded-lg border-l-4 border-success bg-green-50 p-4 dark:bg-green-900/20">
-                <div class="flex items-center gap-3">
-                    <svg class="size-5 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                    <p class="text-success">{{ session('success') }}</p>
-                </div>
+            <div class="rounded-md border-l-4 border-success bg-surface px-3 py-2 text-sm text-success">
+                {{ session('success') }}
             </div>
         @endif
 
-        <!-- Tabla de usuarios -->
-        <div class="overflow-hidden rounded-lg border border-gray-200 bg-surface shadow-sm dark:border-gray-700">
+        {{--Contenedor tabla--}}
+        <div class="overflow-x-auto">
             @if ($usuarios->count() > 0)
-                <div class="overflow-x-auto">
-                    <table class="w-full divide-y divide-gray-200 dark:divide-gray-700">
-                        <!-- Encabezado de tabla -->
-                        <thead class="bg-gray-50 dark:bg-gray-800">
-                            <tr>
-                                <th class="px-6 py-3 text-left text-sm font-semibold text-text">
-                                    Nombre
-                                </th>
-                                <th class="px-6 py-3 text-left text-sm font-semibold text-text">
-                                    Apellido
-                                </th>
-                                <th class="px-6 py-3 text-left text-sm font-semibold text-text">
-                                    Correo Electrónico
-                                </th>
-                                <th class="px-6 py-3 text-left text-sm font-semibold text-text">
-                                    Rol
-                                </th>
-                                <th class="px-6 py-3 text-left text-sm font-semibold text-text">
-                                    Registro
-                                </th>
-                                <th class="px-6 py-3 text-center text-sm font-semibold text-text">
-                                    Acciones
-                                </th>
+                <table class="min-w-full text-sm">
+                    <thead class="border-b border-gray-200 bg-surface dark:border-gray-700">
+                        <tr>
+                            <th class="px-4 py-2 text-left font-medium text-text">Nombre</th>
+                            <th class="px-4 py-2 text-left font-medium text-text">Apellido</th>
+                            <th class="px-4 py-2 text-left font-medium text-text">Correo</th>
+                            <th class="px-4 py-2 text-left font-medium text-text">Rol</th>
+                            <th class="px-4 py-2 text-left font-medium text-text">Registro</th>
+                            <th class="px-4 py-2 text-center font-medium text-text">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+                        @foreach ($usuarios as $usuario)
+                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/40">
+                                <td class="px-4 py-2">
+                                    <div class="flex items-center gap-2">
+                                        <div class="flex h-8 w-8 items-center justify-center rounded-full bg-brand text-xs font-semibold text-white">
+                                            {{ $usuario->initials() }}
+                                        </div>
+                                        <span class="text-sm font-medium text-text">
+                                            {{ $usuario->name }}
+                                        </span>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-2 text-sm text-text">
+                                    {{ $usuario->apellido ?? '—' }}
+                                </td>
+                                <td class="px-4 py-2 text-sm text-gray-600 dark:text-gray-400">
+                                    {{ $usuario->email }}
+                                </td>
+                                <td class="px-4 py-2 text-sm">
+                                    @if ($usuario->rol === 'admin')
+                                        <span class="rounded-full bg-accent/10 px-2.5 py-0.5 text-xs font-medium text-accent">
+                                            Admin
+                                        </span>
+                                    @else
+                                        <span class="rounded-full bg-info/10 px-2.5 py-0.5 text-xs font-medium text-info">
+                                            Cliente
+                                        </span>
+                                    @endif
+                                </td>
+                                <td class="px-4 py-2 text-xs text-gray-600 dark:text-gray-400">
+                                    {{ $usuario->created_at->format('d M Y') }}
+                                </td>
+                                <td class="px-4 py-2">
+                                    <!--Boton de Editar-->
+                                    <div class="flex items-center justify-center gap-2">
+                                        <a
+                                            href="{{ route('usuarios.edit', $usuario->id) }}"
+                                            class="text-xs font-medium text-brand hover:underline"
+                                        >
+                                            Editar
+                                        </a>
+
+                                        {{--Separador simple--}}
+                                        <span class="text-gray-400">|</span>
+
+                                        <form
+                                            method="POST"
+                                            action="{{ route('usuarios.destroy', $usuario->id) }}"
+                                            class="inline"
+                                            onsubmit="return confirm('¿Estás seguro de que deseas eliminar este usuario?');"
+                                        >
+                                            @csrf
+                                            @method('DELETE')
+                                            <!--Boton de Editar-->
+                                            <button
+                                                type="submit"
+                                                class="text-xs font-medium text-danger hover:underline"
+                                            >
+                                                Eliminar
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
                             </tr>
-                        </thead>
-                        <!-- Cuerpo de tabla -->
-                        <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-                            @foreach ($usuarios as $usuario)
-                                <tr class="transition-colors duration-150 hover:bg-gray-50 dark:hover:bg-gray-800/50">
-                                    <td class="whitespace-nowrap px-6 py-4">
-                                        <div class="flex items-center gap-3">
-                                            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-brand text-sm font-semibold text-white">
-                                                {{ $usuario->initials() }}
-                                            </div>
-                                            <span class="font-medium text-text">{{ $usuario->name }}</span>
-                                        </div>
-                                    </td>
-                                    <td class="whitespace-nowrap px-6 py-4 text-text">
-                                        {{ $usuario->apellido ?? '—' }}
-                                    </td>
-                                    <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
-                                        {{ $usuario->email }}
-                                    </td>
-                                    <td class="whitespace-nowrap px-6 py-4">
-                                        @if ($usuario->rol === 'admin')
-                                            <span class="inline-flex items-center rounded-full bg-accent/10 px-3 py-1 text-sm font-semibold text-accent">
-                                                Administrador
-                                            </span>
-                                        @else
-                                            <span class="inline-flex items-center rounded-full bg-info/10 px-3 py-1 text-sm font-semibold text-info">
-                                                Cliente
-                                            </span>
-                                        @endif
-                                    </td>
-                                    <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
-                                        {{ $usuario->created_at->format('d M Y') }}
-                                    </td>
-                                    <td class="whitespace-nowrap px-6 py-4">
-                                        <div class="flex items-center justify-center gap-2">
-                                            <!-- Botón Editar -->
-                                            <a href="{{ route('usuarios.edit', $usuario->id) }}" class="inline-flex items-center justify-center rounded-md bg-brand/10 p-2 text-brand transition-all duration-200 hover:bg-brand hover:text-white">
-                                                <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                                                </svg>
-                                            </a>
-                                            <!-- Botón Eliminar -->
-                                            <form method="POST" action="{{ route('usuarios.destroy', $usuario->id) }}" class="inline" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este usuario?');">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="inline-flex items-center justify-center rounded-md bg-danger/10 p-2 text-danger transition-all duration-200 hover:bg-danger hover:text-white">
-                                                    <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                                                    </svg>
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                        @endforeach
+                    </tbody>
+                </table>
             @else
-                <!-- Estado vacío -->
-                <div class="flex flex-col items-center justify-center px-6 py-16">
-                    <svg class="size-16 text-gray-300 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.856-1.488M15 6a3 3 0 11-6 0 3 3 0 016 0zM6 20h12a6 6 0 00-6-6 6 6 0 00-6 6z"></path>
-                    </svg>
-                    <h3 class="mt-4 text-lg font-semibold text-text">No hay usuarios registrados</h3>
-                    <p class="mt-1 text-gray-600 dark:text-gray-400">Comienza creando el primer usuario</p>
-                    <a href="{{ route('usuarios.create') }}" class="mt-6 inline-flex items-center gap-2 rounded-lg bg-brand px-4 py-2 font-semibold text-white transition-all duration-200 hover:shadow-lg hover:brightness-110">
-                        <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                        </svg>
-                        Crear Primer Usuario
+                {{--Estado vacío simple--}}
+                <div class="rounded-md border border-dashed border-gray-300 px-4 py-10 text-center dark:border-gray-700">
+                    <p class="text-sm font-medium text-text">
+                        No hay usuarios registrados.
+                    </p>
+                    <p class="mt-1 text-xs text-gray-600 dark:text-gray-400">
+                        Crea el primer usuario para comenzar a gestionar el sistema.
+                    </p>
+                    <a
+                        href="{{ route('usuarios.create') }}"
+                        class="mt-4 inline-flex items-center justify-center rounded-md bg-brand px-3 py-1.5 text-sm font-medium text-white hover:brightness-110"
+                    >
+                        Crear usuario
                     </a>
                 </div>
             @endif
         </div>
-
     </div>
 </x-layouts.app>
