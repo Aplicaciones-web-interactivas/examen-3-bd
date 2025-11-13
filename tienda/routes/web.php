@@ -21,6 +21,7 @@ Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
+
 Route::middleware(['auth'])->group(function () {
     Route::redirect('settings', 'settings/profile');
 
@@ -57,9 +58,15 @@ Route::middleware(['auth'])->group(function () {
     });
 
     // Orders routes - Administrador
+// Orders routes - Administrador
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/finanzas', [OrderController::class, 'finanza'])->name('finanzas');
+
+        // CRUD de descuentos con Livewire (admin)
+        Route::get('/descuentos', \App\Livewire\Admin\DescuentosCrud::class)
+            ->name('descuentos');
     });
+
         
     //Rutas para Producto
     Route::get('productos', [ProductoController::class, 'index'])->name('productos.index');
@@ -94,5 +101,6 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/usuarios/{id}', [UserController::class, 'update'])->name('usuarios.update');
         Route::delete('/usuarios/{id}', [UserController::class, 'destroy'])->name('usuarios.destroy');
     });
+
 
 });
