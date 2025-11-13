@@ -1,13 +1,11 @@
 <?php
 
-use App\Http\Controllers\OrderController;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
 use App\Livewire\Settings\TwoFactor;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
-use App\Http\Controllers\ProductoController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -34,24 +32,4 @@ Route::middleware(['auth'])->group(function () {
             ),
         )
         ->name('two-factor.show');
-
-    // Orders routes - Cliente
-    Route::prefix('orders')->name('orders.')->group(function () {
-        Route::get('/', [OrderController::class, 'index'])->name('index');
-        Route::post('/checkout', [OrderController::class, 'checkout'])->name('checkout');
-        Route::get('/{id}', [OrderController::class, 'show'])->name('show');
-    });
-
-    // Orders routes - Administrador
-    Route::prefix('admin')->name('admin.')->group(function () {
-        Route::get('/finanzas', [OrderController::class, 'finanza'])->name('finanzas');
-    });
-        
-    //Rutas para Producto
-    Route::get('productos', [ProductoController::class, 'index'])->name('productos.index');
-    Route::get('productos/{id}', [ProductoController::class, 'show'])->name('productos.show');
-    Route::post('productos', [ProductoController::class, 'store'])->name('productos.store');
-    Route::put('productos/{id}', [ProductoController::class, 'update'])->name('productos.update');
-    Route::delete('productos/{id}', [ProductoController::class, 'destroy'])->name('productos.destroy');
-
 });
