@@ -17,10 +17,12 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 use App\Models\Imagen;
+use App\Models\Descuento;
 
 Route::get('/testing', function () {
     $imagenes = Imagen::all();
-    return view('testing', compact('imagenes'));
+    $descuentos = Descuento::all();
+    return view('testing', compact('imagenes','descuentos'));
 });
 
 Route::view('dashboard', 'dashboard')

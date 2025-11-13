@@ -16,16 +16,13 @@
 
 <h1>Vista de Testing – CRUD Imágenes y Descuentos</h1>
 
-{{-- Mensajes --}}
 @if(session('status'))
     <p style="color: green;"><strong>{{ session('status') }}</strong></p>
 @endif
 
 <hr>
 
-{{-- ===================================================== --}}
-{{-- FORMULARIO CREAR IMAGEN --}}
-{{-- ===================================================== --}}
+{{--FORMULARIO CREAR IMAGEN--}}
 <h2>Crear Imagen</h2>
 
 <form action="{{ url('/imagenes') }}" method="POST">
@@ -39,10 +36,7 @@
     <button type="submit">Guardar Imagen</button>
 </form>
 
-
-{{-- ===================================================== --}}
 {{-- LISTA DE IMÁGENES --}}
-{{-- ===================================================== --}}
 <h2>Lista de Imágenes</h2>
 
 @foreach($imagenes as $img)
@@ -76,9 +70,7 @@
 @endforeach
 
 
-{{-- ===================================================== --}}
 {{-- FORMULARIO CREAR DESCUENTO --}}
-{{-- ===================================================== --}}
 <h2>Crear Descuento</h2>
 
 <form action="{{ url('/descuentos') }}" method="POST">
@@ -87,15 +79,51 @@
     <label>Porcentaje de descuento:</label>
     <input type="number" name="porcentaje" min="1" max="100" required>
 
-    <label>Fecha inicio (opcional):</label>
+    <label>Fecha inicio:</label>
     <input type="date" name="fecha_inicio">
 
-    <label>Fecha fin (opcional):</label>
+    <label>Fecha fin:</label>
     <input type="date" name="fecha_fin">
 
     <button type="submit">Crear Descuento</button>
 </form>
 
+{{-- LISTA DE DESCUENTOS --}}
+<h2>Lista de Descuentos</h2>
+
+@foreach($descuentos as $des)
+    <div class="item">
+        <strong>ID:</strong> {{ $des->id }} <br>
+        <strong>Porcentaje:</strong> {{ $des->porcentaje }}% <br>
+        <strong>Fecha inicio:</strong> {{ $des->fecha_inicio }} <br>
+        <strong>Fecha fin:</strong> {{ $des->fecha_fin }} <br>
+        <br>
+
+        {{-- EDITAR DESCUENTO --}}
+        <form action="{{ url('/descuentos/'.$des->id) }}" method="POST">
+            @csrf
+            @method('PUT')
+
+            <label>Editar Porcentaje:</label>
+            <input type="number" name="porcentaje" min="1" max="100" value="{{ $des->porcentaje }}">
+
+            <label>Editar Fecha Inicio:</label>
+            <input type="date" name="fecha_inicio" value="{{ $des->fecha_inicio }}">
+
+            <label>Editar Fecha Fin:</label>
+            <input type="date" name="fecha_fin" value="{{ $des->fecha_fin }}">
+
+            <button type="submit">Actualizar</button>
+        </form>
+
+        {{-- ELIMINAR DESCUENTO --}}
+        <form action="{{ url('/descuentos/'.$des->id) }}" method="POST">
+            @csrf
+            @method('DELETE')
+            <button type="submit" style="background:red;color:white;">Eliminar</button>
+        </form>
+    </div>
+@endforeach
 
 </body>
 </html>
