@@ -36,18 +36,57 @@
 <form method="POST" action="{{ route('productos.store') }}">
   @csrf
   <h3>Crear producto</h3>
-  <label>Nombre <input type="text" name="nombre" value="{{ old('nombre') }}"></label>
-  <label>Descripción <input type="text" name="descripcion" value="{{ old('descripcion') }}"></label>
-  <label>Precio <input type="number" step="0.01" name="precio" value="{{ old('precio') }}"></label>
-  <label>imagen_id <input type="number" name="imagen_id" value="{{ old('imagen_id') }}"></label>
-  <label>descuento_id <input type="number" name="descuento_id" value="{{ old('descuento_id') }}"></label>
-  <label>Stock <input type="number" name="stock" value="{{ old('stock') }}"></label>
+
+  <label>Nombre
+    <input type="text" name="nombre" value="{{ old('nombre') }}">
+  </label>
+
+  <label>Descripción
+    <input type="text" name="descripcion" value="{{ old('descripcion') }}">
+  </label>
+
+  <label>Precio
+    <input type="number" step="0.01" name="precio" value="{{ old('precio') }}">
+  </label>
+
+  <label>Imagen
+    <select name="imagen_id">
+      <option value="" disabled selected>Selecciona imagen…</option>
+      @forelse($imagenes as $img)
+        <option value="{{ $img->id }}" @selected(old('imagen_id') == $img->id)>
+          {{ $img->nombre ?? ('Imagen #'.$img->id) }}
+        </option>
+      @empty
+        <option value="" disabled>No hay imágenes registradas</option>
+      @endforelse
+    </select>
+  </label>
+
+  <label>Descuento
+    <select name="descuento_id">
+      <option value="" disabled selected>Selecciona descuento…</option>
+      @forelse($descuentos as $desc)
+        <option value="{{ $desc->id }}" @selected(old('descuento_id') == $desc->id)>
+          @if(!is_null($desc->porcentaje))
+            {{ $desc->porcentaje }}%
+          @else
+            Descuento #{{ $desc->id }}
+          @endif
+        </option>
+      @empty
+        <option value="" disabled>No hay descuentos registrados</option>
+      @endforelse
+    </select>
+  </label>
+
+  <label>Stock
+    <input type="number" name="stock" value="{{ old('stock') }}">
+  </label>
+
   <button type="submit">Guardar</button>
 </form>
 
 <hr>
-
-
 
 <h3>Listado</h3>
 
@@ -61,8 +100,8 @@
         <th>Nombre</th>
         <th>Descripción</th>
         <th>Precio</th>
-        <th>imagen_id</th>
-        <th>descuento_id</th>
+        <th>Imagen</th>
+        <th>Descuento</th>
         <th>Stock</th>
         <th>Actualizar</th>
         <th>Eliminar</th>
@@ -75,8 +114,16 @@
           <td>{{ $p->nombre }}</td>
           <td>{{ $p->descripcion }}</td>
           <td>{{ $p->precio }}</td>
-          <td>{{ $p->imagen_id }}</td>
-          <td>{{ $p->descuento_id }}</td>
+          <td>
+            {{ optional($p->imagen)->nombre ?? '—' }}
+          </td>
+          <td>
+            @if($p->descuento && !is_null($p->descuento->porcentaje))
+              {{ $p->descuento->porcentaje }}%
+            @else
+              —
+            @endif
+          </td>
           <td>{{ $p->stock }}</td>
           <td>
             <form method="POST" action="{{ route('productos.update', $p->id) }}">
@@ -85,8 +132,29 @@
               <input type="text" name="nombre" value="{{ $p->nombre }}">
               <input type="text" name="descripcion" value="{{ $p->descripcion }}">
               <input type="number" step="0.01" name="precio" value="{{ $p->precio }}">
-              <input type="number" name="imagen_id" value="{{ $p->imagen_id }}">
-              <input type="number" name="descuento_id" value="{{ $p->descuento_id }}">
+
+              <select name="imagen_id">
+                <option value="">(sin cambio)</option>
+                @foreach($imagenes as $img)
+                  <option value="{{ $img->id }}" @selected($p->imagen_id == $img->id)>
+                    {{ $img->nombre ?? ('Imagen #'.$img->id) }}
+                  </option>
+                @endforeach
+              </select>
+
+              <select name="descuento_id">
+                <option value="">(sin cambio)</option>
+                @foreach($descuentos as $desc)
+                  <option value="{{ $desc->id }}" @selected($p->descuento_id == $desc->id)>
+                    @if(!is_null($desc->porcentaje))
+                      {{ $desc->porcentaje }}%
+                    @else
+                      Descuento #{{ $desc->id }}
+                    @endif
+                  </option>
+                @endforeach
+              </select>
+
               <input type="number" name="stock" value="{{ $p->stock }}">
               <button type="submit">Actualizar</button>
             </form>
