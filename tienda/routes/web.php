@@ -56,10 +56,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/preview', [CartController::class, 'checkoutPreview'])->name('preview');
     });
 
-    // Orders routes - Administrador
-    Route::prefix('admin')->name('admin.')->group(function () {
-        Route::get('/finanzas', [OrderController::class, 'finanza'])->name('finanzas');
-    });
 
     //Rutas para Producto
     Route::get('productos', [ProductoController::class, 'index'])->name('productos.index');
@@ -94,6 +90,11 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/usuarios/{id}/editar', [UserController::class, 'edit'])->name('usuarios.edit');
         Route::put('/usuarios/{id}', [UserController::class, 'update'])->name('usuarios.update');
         Route::delete('/usuarios/{id}', [UserController::class, 'destroy'])->name('usuarios.destroy');
+    });
+
+     // Orders routes - Administrador
+    Route::prefix('admin')->middleware('admin')->name('admin.')->group(function () {
+        Route::get('/finanzas', [OrderController::class, 'finanza'])->name('finanzas');
     });
 
 });
