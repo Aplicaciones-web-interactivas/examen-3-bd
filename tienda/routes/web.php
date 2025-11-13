@@ -77,7 +77,7 @@ Route::middleware(['auth'])->group(function () {
         Route::put('descuentos/{id}', [DescuentoController::class, 'update'])->name('descuentos.update');
         Route::delete('descuentos/{id}', [DescuentoController::class, 'destroy'])->name('descuentos.destroy');
 
-        // Rutas para Imágenes
+         // Rutas para Imágenes
         Route::get('imagenes', [ImagenController::class, 'index'])->name('imagenes.index');
         Route::get('imagenes/create', [ImagenController::class, 'create'])->name('imagenes.create');
         Route::post('imagenes', [ImagenController::class, 'store'])->name('imagenes.store');
