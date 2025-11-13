@@ -58,7 +58,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
 
-     //Rutas para Producto
+    //Rutas para Producto
     Route::get('productos', [ProductoController::class, 'index'])->name('productos.index');
     Route::get('productos/{id}', [ProductoController::class, 'show'])->name('productos.show');
 
