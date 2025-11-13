@@ -16,6 +16,12 @@ use App\Http\Controllers\CartController;
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
+use App\Models\Imagen;
+
+Route::get('/testing', function () {
+    $imagenes = Imagen::all();
+    return view('testing', compact('imagenes'));
+});
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
