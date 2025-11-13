@@ -7,7 +7,9 @@ use Illuminate\Http\Request;
 
 use App\Models\Imagen;
 use App\Models\Descuento;
-
+use Illuminate\Support\Facades\Mail;
+use App\Models\User;
+use App\Mail\Descuentos as ProductoDescuentoMailable;
 use Maatwebsite\Excel\Facades\Excel;
 
 
@@ -23,7 +25,7 @@ class ProductoController extends Controller
             $productos = \App\Models\Producto::all();
         }
         $imagenes = Imagen::select('id', 'nombre')->orderBy('id')->get();
-        $descuentos = Descuento::select('id','porcentaje')->orderBy('id')->get(); // porcentaje existe según tu modelo
+        $descuentos = Descuento::select('id','porcentaje')->orderBy('id')->get();
 
         return view('producto', compact('productos','imagenes','descuentos'));
     }
@@ -49,7 +51,21 @@ class ProductoController extends Controller
             'stock'         => 'required|integer|min:0',
         ]);
 
-        Producto::create($validated);
+        $producto = Producto::create($validated);
+
+        // Si el producto tiene descuento válido, enviar correo a clientes.
+        $descuento = $producto->descuento;
+        if ($descuento && $descuento->estaActivo()) {
+            User::where('rol', 'cliente')
+                ->select('id','email')
+                ->chunk(100, function($users) use ($producto, $descuento) {
+                    foreach ($users as $user) {
+                        if ($user->email) {
+                            Mail::to($user->email)->send(new ProductoDescuentoMailable($producto, $descuento));
+                        }
+                    }
+                });
+        }
 
         return redirect()
             ->route('productos.index')
@@ -71,6 +87,23 @@ class ProductoController extends Controller
         ]);
 
         $producto->update($validated);
+
+        // Si se cambió descuento y ahora tiene uno activo, enviar correo a clientes.
+        if (array_key_exists('descuento_id', $validated)) {
+            $producto->load('descuento');
+            $descuento = $producto->descuento;
+            if ($descuento && $descuento->estaActivo()) {
+                User::where('rol', 'cliente')
+                    ->select('id','email')
+                    ->chunk(100, function($users) use ($producto, $descuento) {
+                        foreach ($users as $user) {
+                            if ($user->email) {
+                                Mail::to($user->email)->send(new ProductoDescuentoMailable($producto, $descuento));
+                            }
+                        }
+                    });
+            }
+        }
 
         return redirect()
             ->route('productos.index')
