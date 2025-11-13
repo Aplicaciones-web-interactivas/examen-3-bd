@@ -4,7 +4,7 @@
         <div class="flex items-center justify-between border-b border-gray-200 pb-3 dark:border-gray-700">
             <div>
                 <h1 class="text-2xl font-semibold text-text">
-                    Gestión de Usuarios
+                    Gestión de Usuarios del Sistema
                 </h1>
                 <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
                     Lista de usuarios registrados en el sistema.
