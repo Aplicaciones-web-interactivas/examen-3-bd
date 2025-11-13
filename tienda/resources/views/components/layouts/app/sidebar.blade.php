@@ -21,6 +21,14 @@
             {{ __('Productos') }}
             </flux:navlist.item>
 
+            @auth
+                @if(auth()->user()->rol === 'admin')
+                    <flux:navlist.item icon="users" :href="route('usuarios.index')" :current="request()->routeIs('usuarios.*')" wire:navigate>
+                        {{ __('Gestión de Usuarios') }}
+                    </flux:navlist.item>
+                @endif
+            @endauth
+
             <flux:spacer />
 
             <flux:navlist variant="outline">
