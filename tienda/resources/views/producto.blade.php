@@ -1,11 +1,8 @@
-<!doctype html>
-<html lang="es">
-<head>
-  <meta charset="utf-8">
-  <title>Productos (pruebas)</title>
-</head>
-<body>
+@extends('layouts.app')
 
+@section('title', __('Productos'))
+
+@section('content')
 <h1>Productos</h1>
 
 @if (session('status'))
@@ -171,6 +168,4 @@
     </tbody>
   </table>
 @endif
-
-</body>
-</html>
+@endsection
