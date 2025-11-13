@@ -7,23 +7,28 @@ use Illuminate\Http\Request;
 
 use App\Models\Imagen;
 use App\Models\Descuento;
+use Illuminate\Support\Facades\Mail;
+use App\Models\User;
+use App\Mail\Descuentos as ProductoDescuentoMailable;
+use Maatwebsite\Excel\Facades\Excel;
+
+
 
 class ProductoController extends Controller
 {
     public function index(Request $request)
     {
-        //este es in filtro para buscar por nombre 
+        //este es in filtro para buscar por nombre
         if ($request->filled('nombre')) {
             $productos = \App\Models\Producto::where('nombre', 'like', '%'.$request->nombre.'%')->get();
-        } else { //si no lo encuientra te muestra todos 
+        } else { //si no lo encuientra te muestra todos
             $productos = \App\Models\Producto::all();
         }
         $imagenes = Imagen::select('id', 'nombre')->orderBy('id')->get();
-        $descuentos = Descuento::select('id','porcentaje')->orderBy('id')->get(); // porcentaje existe según tu modelo
+        $descuentos = Descuento::select('id','porcentaje')->orderBy('id')->get();
 
         return view('producto', compact('productos','imagenes','descuentos'));
     }
-
 
     public function show($id)
     {
@@ -45,10 +50,24 @@ class ProductoController extends Controller
             'stock'         => 'required|integer|min:0',
         ]);
 
-        Producto::create($validated);
+        $producto = Producto::create($validated);
+
+        // Si el producto tiene descuento válido, enviar correo a clientes.
+        $descuento = $producto->descuento;
+        if ($descuento && $descuento->estaActivo()) {
+            User::where('rol', 'cliente')
+                ->select('id','email')
+                ->chunk(100, function($users) use ($producto, $descuento) {
+                    foreach ($users as $user) {
+                        if ($user->email) {
+                            Mail::to($user->email)->send(new ProductoDescuentoMailable($producto, $descuento));
+                        }
+                    }
+                });
+        }
 
         return redirect()
-            ->route('productos.index')
+            ->route('productos-admin.index')
             ->with('status', 'Producto creado correctamente');
     }
 
@@ -68,8 +87,25 @@ class ProductoController extends Controller
 
         $producto->update($validated);
 
+        // Si se cambió descuento y ahora tiene uno activo, enviar correo a clientes.
+        if (array_key_exists('descuento_id', $validated)) {
+            $producto->load('descuento');
+            $descuento = $producto->descuento;
+            if ($descuento && $descuento->estaActivo()) {
+                User::where('rol', 'cliente')
+                    ->select('id','email')
+                    ->chunk(100, function($users) use ($producto, $descuento) {
+                        foreach ($users as $user) {
+                            if ($user->email) {
+                                Mail::to($user->email)->send(new ProductoDescuentoMailable($producto, $descuento));
+                            }
+                        }
+                    });
+            }
+        }
+
         return redirect()
-            ->route('productos.index')
+            ->route('productos-admin.index')
             ->with('status', 'Producto actualizado');
     }
 
@@ -80,7 +116,36 @@ class ProductoController extends Controller
         $producto->delete();
 
         return redirect()
-            ->route('productos.index')
+            ->route('productos-admin.index')
             ->with('status', 'Producto eliminado');
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,csv',
+        ]);
+
+        $file = $request->file('file');
+
+        Excel::import(new \App\Imports\ProductoImport, $file);
+
+        return redirect()
+            ->route('productos-admin.index')
+            ->with('status', 'Productos importados correctamente');
+    }
+
+    public function index2(Request $request)
+    {
+        //este es in filtro para buscar por nombre
+        if ($request->filled('nombre')) {
+            $productos = \App\Models\Producto::where('nombre', 'like', '%'.$request->nombre.'%')->get();
+        } else { //si no lo encuientra te muestra todos
+            $productos = \App\Models\Producto::all();
+        }
+        $imagenes = Imagen::select('id', 'nombre')->orderBy('id')->get();
+        $descuentos = Descuento::select('id','porcentaje')->orderBy('id')->get(); // porcentaje existe según tu modelo
+
+        return view('productos-admin', compact('productos','imagenes','descuentos'));
     }
 }
