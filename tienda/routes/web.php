@@ -49,6 +49,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/', [OrderController::class, 'index'])->name('index');
         Route::post('/checkout', [OrderController::class, 'checkout'])->name('checkout');
         Route::get('/{id}', [OrderController::class, 'show'])->name('show');
+        Route::get('/{id}/ticket', [OrderController::class, 'ticket'])->name('ticket');
     });
 
     // Cart routes - Cliente
@@ -61,30 +62,38 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/preview', [CartController::class, 'checkoutPreview'])->name('preview');
     });
 
-
-    //Rutas para Producto
-    Route::get('productos', [ProductoController::class, 'index'])->name('productos.index');
-    Route::get('productos/{id}', [ProductoController::class, 'show'])->name('productos.show');
-    Route::post('productos', [ProductoController::class, 'store'])->name('productos.store');
+    // Rutas para Producto (solo admin para crear/editar/etc)
+    Route::middleware('admin')->group(function () {
+        //Rutas para Producto
+        Route::get('productos', [ProductoController::class, 'index'])->name('productos.index');
+        Route::get('productos/{id}', [ProductoController::class, 'show'])->name('productos.show');
+        Route::post('productos', [ProductoController::class, 'store'])->name('productos.store');
     Route::put('productos/{id}', [ProductoController::class, 'update'])->name('productos.update');
     Route::delete('productos/{id}', [ProductoController::class, 'destroy'])->name('productos.destroy');
     Route::post('productos/import', [ProductoController::class, 'import'])->name('productos.import');
+    Route::get('productos-admin', [ProductoController::class, 'index2'])->name('productos-admin.index');
 
-        // Rutas para Descuentos
-    Route::get('descuentos', [DescuentoController::class, 'index'])->name('descuentos.index');
-    Route::get('descuentos/create', [DescuentoController::class, 'create'])->name('descuentos.create');
-    Route::post('descuentos', [DescuentoController::class, 'store'])->name('descuentos.store');
-    Route::get('descuentos/{id}/edit', [DescuentoController::class, 'edit'])->name('descuentos.edit');
-    Route::put('descuentos/{id}', [DescuentoController::class, 'update'])->name('descuentos.update');
-    Route::delete('descuentos/{id}', [DescuentoController::class, 'destroy'])->name('descuentos.destroy');
+        Route::post('productos', [ProductoController::class, 'store'])->name('productos.store');
+        Route::put('productos/{id}', [ProductoController::class, 'update'])->name('productos.update');
+        Route::delete('productos/{id}', [ProductoController::class, 'destroy'])->name('productos.destroy');
+        Route::post('productos/import', [ProductoController::class, 'import'])->name('productos.import');
 
-    // Rutas para Imágenes
-    Route::get('imagenes', [ImagenController::class, 'index'])->name('imagenes.index');
-    Route::get('imagenes/create', [ImagenController::class, 'create'])->name('imagenes.create');
-    Route::post('imagenes', [ImagenController::class, 'store'])->name('imagenes.store');
-    Route::get('imagenes/{id}/edit', [ImagenController::class, 'edit'])->name('imagenes.edit');
-    Route::put('imagenes/{id}', [ImagenController::class, 'update'])->name('imagenes.update');
-    Route::delete('imagenes/{id}', [ImagenController::class, 'destroy'])->name('imagenes.destroy');
+        // Rutas para Descuentos (controller)
+        Route::get('descuentos', [DescuentoController::class, 'index'])->name('descuentos.index');
+        Route::get('descuentos/create', [DescuentoController::class, 'create'])->name('descuentos.create');
+        Route::post('descuentos', [DescuentoController::class, 'store'])->name('descuentos.store');
+        Route::get('descuentos/{id}/edit', [DescuentoController::class, 'edit'])->name('descuentos.edit');
+        Route::put('descuentos/{id}', [DescuentoController::class, 'update'])->name('descuentos.update');
+        Route::delete('descuentos/{id}', [DescuentoController::class, 'destroy'])->name('descuentos.destroy');
+
+        // Rutas para Imágenes
+        Route::get('imagenes', [ImagenController::class, 'index'])->name('imagenes.index');
+        Route::get('imagenes/create', [ImagenController::class, 'create'])->name('imagenes.create');
+        Route::post('imagenes', [ImagenController::class, 'store'])->name('imagenes.store');
+        Route::get('imagenes/{id}/edit', [ImagenController::class, 'edit'])->name('imagenes.edit');
+        Route::put('imagenes/{id}', [ImagenController::class, 'update'])->name('imagenes.update');
+        Route::delete('imagenes/{id}', [ImagenController::class, 'destroy'])->name('imagenes.destroy');
+    });
 
     // Rutas para la gestión de usuarios (solo para administradores)
     // AGREGAR AQUI TODAS LAS RUTAS A LAS QUE SOLO PUEDAN ACCEDER LOS ADMINISTRADORES
@@ -97,9 +106,12 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/usuarios/{id}', [UserController::class, 'destroy'])->name('usuarios.destroy');
     });
 
-     // Orders routes - Administrador
+    // Orders routes - Administrador (panel admin)
     Route::prefix('admin')->middleware('admin')->name('admin.')->group(function () {
         Route::get('/finanzas', [OrderController::class, 'finanza'])->name('finanzas');
-    });
 
+        // CRUD de descuentos con Livewire (admin)
+        Route::get('/descuentos', \App\Livewire\Admin\DescuentosCrud::class)
+            ->name('descuentos');
+    });
 });
