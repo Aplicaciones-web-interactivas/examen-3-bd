@@ -18,7 +18,15 @@
                 autocomplete="name"
                 :placeholder="__('Full name')"
             />
-
+            <flux:input
+                name="apellido"
+                :label="__('Last Name')"
+                type="text"
+                required
+                autofocus
+                autocomplete="name"
+                :placeholder="__('Last name')"
+            />
             <!-- Email Address -->
             <flux:input
                 name="email"
