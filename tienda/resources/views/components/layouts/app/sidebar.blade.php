@@ -17,9 +17,11 @@
                 </flux:navlist.group>
             </flux:navlist>
 
-           <flux:navlist.item icon="shopping-cart" :href="route('productos.index')" :current="request()->routeIs('productos.*')">
-            {{ __('Productos') }}
-            </flux:navlist.item>
+            @if(auth()->user()->rol === 'cliente')   
+            <flux:navlist.item icon="shopping-cart" :href="route('productos.index')" :current="request()->routeIs('productos.*')">
+             {{ __('Productos') }}
+             </flux:navlist.item>
+           @endif 
             <flux:spacer />
 
             <flux:navlist variant="outline">
