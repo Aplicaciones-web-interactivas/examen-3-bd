@@ -62,6 +62,11 @@ Route::middleware(['auth'])->group(function () {
         //Rutas para Producto
         Route::get('productos', [ProductoController::class, 'index'])->name('productos.index');
         Route::get('productos/{id}', [ProductoController::class, 'show'])->name('productos.show');
+        Route::post('productos', [ProductoController::class, 'store'])->name('productos.store');
+    Route::put('productos/{id}', [ProductoController::class, 'update'])->name('productos.update');
+    Route::delete('productos/{id}', [ProductoController::class, 'destroy'])->name('productos.destroy');
+    Route::post('productos/import', [ProductoController::class, 'import'])->name('productos.import');
+    Route::get('productos-admin', [ProductoController::class, 'index2'])->name('productos-admin.index');
 
         Route::post('productos', [ProductoController::class, 'store'])->name('productos.store');
         Route::put('productos/{id}', [ProductoController::class, 'update'])->name('productos.update');
