@@ -17,11 +17,18 @@
                 </flux:navlist.group>
             </flux:navlist>
 
-            @if(auth()->user()->rol === 'cliente')   
-            <flux:navlist.item icon="shopping-cart" :href="route('productos.index')" :current="request()->routeIs('productos.*')">
-             {{ __('Productos') }}
-             </flux:navlist.item>
-           @endif 
+           <flux:navlist.item icon="shopping-cart" :href="route('productos.index')" :current="request()->routeIs('productos.*')">
+            {{ __('Productos') }}
+            </flux:navlist.item>
+
+            @auth
+                @if(auth()->user()->rol === 'admin')
+                    <flux:navlist.item icon="users" :href="route('usuarios.index')" :current="request()->routeIs('usuarios.*')" wire:navigate>
+                        {{ __('Gestión de Usuarios') }}
+                    </flux:navlist.item>
+                @endif
+            @endauth
+
             <flux:spacer />
 
             <flux:navlist variant="outline">
