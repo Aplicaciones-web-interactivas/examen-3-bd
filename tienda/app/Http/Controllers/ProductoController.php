@@ -30,7 +30,6 @@ class ProductoController extends Controller
         return view('producto', compact('productos','imagenes','descuentos'));
     }
 
-
     public function show($id)
     {
         $producto = Producto::findOrFail($id);
@@ -68,7 +67,7 @@ class ProductoController extends Controller
         }
 
         return redirect()
-            ->route('productos.index')
+            ->route('productos-admin.index')
             ->with('status', 'Producto creado correctamente');
     }
 
@@ -106,7 +105,7 @@ class ProductoController extends Controller
         }
 
         return redirect()
-            ->route('productos.index')
+            ->route('productos-admin.index')
             ->with('status', 'Producto actualizado');
     }
 
@@ -117,7 +116,7 @@ class ProductoController extends Controller
         $producto->delete();
 
         return redirect()
-            ->route('productos.index')
+            ->route('productos-admin.index')
             ->with('status', 'Producto eliminado');
     }
 
@@ -132,7 +131,21 @@ class ProductoController extends Controller
         Excel::import(new \App\Imports\ProductoImport, $file);
 
         return redirect()
-            ->route('productos.index')
+            ->route('productos-admin.index')
             ->with('status', 'Productos importados correctamente');
+    }
+
+    public function index2(Request $request)
+    {
+        //este es in filtro para buscar por nombre
+        if ($request->filled('nombre')) {
+            $productos = \App\Models\Producto::where('nombre', 'like', '%'.$request->nombre.'%')->get();
+        } else { //si no lo encuientra te muestra todos
+            $productos = \App\Models\Producto::all();
+        }
+        $imagenes = Imagen::select('id', 'nombre')->orderBy('id')->get();
+        $descuentos = Descuento::select('id','porcentaje')->orderBy('id')->get(); // porcentaje existe según tu modelo
+
+        return view('productos-admin', compact('productos','imagenes','descuentos'));
     }
 }

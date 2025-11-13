@@ -68,6 +68,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('productos/{id}', [ProductoController::class, 'update'])->name('productos.update');
     Route::delete('productos/{id}', [ProductoController::class, 'destroy'])->name('productos.destroy');
     Route::post('productos/import', [ProductoController::class, 'import'])->name('productos.import');
+    Route::get('productos-admin', [ProductoController::class, 'index2'])->name('productos-admin.index');
 
         // Rutas para Descuentos
         Route::get('descuentos', [DescuentoController::class, 'index'])->name('descuentos.index');
