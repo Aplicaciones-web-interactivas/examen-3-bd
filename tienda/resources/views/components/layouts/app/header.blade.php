@@ -4,20 +4,20 @@
         @include('partials.head')
     </head>
     <body class="min-h-screen bg-white dark:bg-white" style="--color-zinc-100: #f5f5f5;">
-        <flux:header container class="border-b border-zinc-200 bg-white dark:bg-white py-8">
+        <flux:header container class="border-b border-zinc-200 bg-red-600 dark:bg-red-600 py-8">
             <flux:sidebar.toggle class="lg:hidden size-12 text-[#f5f5f5]" icon="bars-2" inset="left" />
 
             <a href="{{ route('dashboard') }}" class="ms-2 me-5 flex items-center space-x-5 rtl:space-x-reverse lg:ms-0" wire:navigate>
                 <img
-                    src="{{ asset('images/asLogoB.png') }}"
+                    src="{{ asset('images/buenfinsinfondo.png') }}"
                     alt="Logo"
                     class="h-16 w-auto"
                 />
             </a>
 
-            <flux:navbar class="-mb-px max-lg:hidden gap-8 text-[#4472CA] text-2xl font-semibold">
+            <flux:navbar class="-mb-px max-lg:hidden gap-8 text-white text-2xl font-semibold">
                 <flux:navbar.item
-                    class="!text-[#4472CA] text-2xl font-semibold flex items-center gap-3 [&_svg]:size-7"
+                    class="!text-white text-2xl font-semibold flex items-center gap-3 [&_svg]:size-7"
                     icon="layout-grid"
                     :href="route('dashboard')"
                     :current="request()->routeIs('dashboard')"
@@ -27,7 +27,7 @@
                 </flux:navbar.item>
 
                 <flux:navbar.item
-                    class="!text-[#4472CA] text-2xl font-semibold flex items-center gap-3 [&_svg]:size-7"
+                    class="!text-white text-2xl font-semibold flex items-center gap-3 [&_svg]:size-7"
                     icon="shopping-cart"
                     :href="route('productos-admin.index')"
                     :current="request()->routeIs('productos.*')"
@@ -39,7 +39,7 @@
                 @auth
                     @if(auth()->user()->rol === 'admin')
                         <flux:navbar.item
-                            class="!text-[#4472CA] text-2xl font-semibold flex items-center gap-3 [&_svg]:size-7"
+                            class="!text-white text-2xl font-semibold flex items-center gap-3 [&_svg]:size-7"
                             icon="users"
                             :href="route('usuarios.index')"
                             :current="request()->routeIs('usuarios.*')"
@@ -57,11 +57,11 @@
             <flux:dropdown
                 position="top"
                 align="end"
-                class="text-accent-light"
+                class="text-white"
                 style="--color-accent-content: var(--color-accent-light);"
             >
                 <flux:profile
-                    class="cursor-pointer text-2xl text-accent-light"
+                    class="cursor-pointer text-2xl text-white"
                     :initials="auth()->user()->initials()"
                 />
 
@@ -78,8 +78,8 @@
                                 </span>
 
                                 <div class="grid flex-1 text-start text-sm leading-tight">
-                                    <span class="truncate font-semibold text-accent-light">{{ auth()->user()->name }}</span>
-                                    <span class="truncate text-xs text-accent-light">{{ auth()->user()->email }}</span>
+                                    <span class="truncate font-semibold text-white">{{ auth()->user()->name }}</span>
+                                    <span class="truncate text-xs text-white">{{ auth()->user()->email }}</span>
                                 </div>
                             </div>
                         </div>
@@ -92,7 +92,7 @@
                             :href="route('profile.edit')"
                             icon="cog"
                             wire:navigate
-                            class="!text-accent-light"
+                            class="!text-white"
                         >
                             {{ __('Settings') }}
                         </flux:menu.item>
@@ -106,7 +106,7 @@
                             as="button"
                             type="submit"
                             icon="arrow-right-start-on-rectangle"
-                            class="w-full !text-accent-light"
+                            class="w-full !text-white"
                         >
                             {{ __('Log Out') }}
                         </flux:menu.item>
@@ -118,11 +118,11 @@
 
         <!-- Mobile Menu -->
         <flux:sidebar stashable sticky class="lg:hidden border-e border-zinc-200 bg-white dark:border-zinc-200 dark:bg-white">
-            <flux:sidebar.toggle class="lg:hidden size-12 text-[#4472CA]" icon="x-mark" />
+            <flux:sidebar.toggle class="lg:hidden size-12 text-white" icon="x-mark" />
 
             <a href="{{ route('dashboard') }}" class="ms-1 flex items-center space-x-3 rtl:space-x-reverse" wire:navigate>
                 <img
-                    src="{{ asset('images/asLogoB.png') }}"
+                    src="{{ asset('images/buenfinsinfondo.png') }}"
                     alt="Logo"
                     class="h-16 w-auto"
                 />
@@ -130,7 +130,7 @@
 
             <flux:navlist variant="outline">
                 <flux:navlist.item
-                    class="!text-[#4472CA] text-2xl font-semibold [&_svg]:size-7"
+                    class="!text-red-600 text-2xl font-semibold [&_svg]:size-7"
                     icon="layout-grid"
                     :href="route('dashboard')"
                     :current="request()->routeIs('dashboard')"
@@ -139,7 +139,7 @@
                     {{ __('Dashboard') }}
                 </flux:navlist.item>
                 <flux:navlist.item
-                    class="!text-[#4472CA] text-2xl font-semibold [&_svg]:size-7"
+                    class="!text-red-600 text-2xl font-semibold [&_svg]:size-7"
                     icon="shopping-cart"
                     :href="route('productos.index')"
                     :current="request()->routeIs('productos.*')"
@@ -150,7 +150,7 @@
                     @auth
                         @if(auth()->user()->rol === 'admin')
                             <flux:navlist.item
-                                class="!text-[#4472CA] text-2xl font-semibold [&_svg]:size-7"
+                                class="!text-red-600 text-2xl font-semibold [&_svg]:size-7"
                                 icon="users"
                                 :href="route('usuarios.index')"
                                 :current="request()->routeIs('usuarios.*')"
@@ -165,11 +165,11 @@
             <flux:spacer />
 
             <flux:navlist variant="outline">
-                <flux:navlist.item class="!text-[#4472CA] text-2xl font-semibold [&_svg]:size-7" icon="folder-git-2" href="https://github.com/laravel/livewire-starter-kit" target="_blank">
+                <flux:navlist.item class="!text-red-600 text-2xl font-semibold [&_svg]:size-7" icon="folder-git-2" href="https://github.com/laravel/livewire-starter-kit" target="_blank">
                     {{ __('Repository') }}
                 </flux:navlist.item>
 
-                <flux:navlist.item class="!text-[#4472CA] text-2xl font-semibold [&_svg]:size-7" icon="book-open-text" href="https://laravel.com/docs/starter-kits#livewire" target="_blank">
+                <flux:navlist.item class="!text-red-600 text-2xl font-semibold [&_svg]:size-7" icon="book-open-text" href="https://laravel.com/docs/starter-kits#livewire" target="_blank">
                     {{ __('Documentation') }}
                 </flux:navlist.item>
             </flux:navlist>
