@@ -75,11 +75,17 @@ class CartController extends Controller
 		});
 
 		$carrito->load('detalles.producto.descuento');
-		return response()->json([
-			'status' => 'ok',
-			'message' => 'Producto agregado al carrito',
-			'data' => $this->serializeCart($carrito),
-		], 201);
+
+		if ($request->expectsJson()) {
+        return response()->json([
+            'status'  => 'ok',
+            'message' => 'Producto agregado al carrito',
+            'data'    => $this->serializeCart($carrito),
+        ], 201);
+    }
+
+    return back()->with('status', 'Producto agregado al carrito');
+		
 	}
 
 	/**

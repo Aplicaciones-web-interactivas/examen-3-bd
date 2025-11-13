@@ -49,6 +49,16 @@
                         </flux:navbar.item>
                     @endif
                 @endauth
+
+                 <flux:navlist.item
+                class="!text-[#4472CA] text-2xl font-semibold items-center gap-3 [&_svg]:size-7"
+                icon="percent-badge" 
+                :href="route('productos.descuento')"
+                :current="request()->routeIs('productos.descuento')"
+                wire:navigate
+            >
+                {{ __('Descuentos') }}
+            </flux:navlist.item>
             </flux:navbar>
 
             <flux:spacer />
@@ -160,6 +170,16 @@
                             </flux:navlist.item>
                         @endif
                     @endauth
+            <flux:navlist.item
+                class="!text-[#4472CA] text-2xl font-semibold [&_svg]:size-7"
+                icon="percent-badge" 
+                :href="route('productos.descuento')"
+                :current="request()->routeIs('productos.descuento')"
+                wire:navigate
+            >
+                {{ __('Descuentos') }}
+            </flux:navlist.item>
+
             </flux:navlist>
 
             <flux:spacer />
