@@ -10,6 +10,7 @@ use Laravel\Fortify\Features;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\DescuentoController;
 use App\Http\Controllers\ImagenController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\CartController;
 
 Route::get('/', function () {
@@ -82,5 +83,16 @@ Route::middleware(['auth'])->group(function () {
     Route::get('imagenes/{id}/edit', [ImagenController::class, 'edit'])->name('imagenes.edit');
     Route::put('imagenes/{id}', [ImagenController::class, 'update'])->name('imagenes.update');
     Route::delete('imagenes/{id}', [ImagenController::class, 'destroy'])->name('imagenes.destroy');
+    
+    // Rutas para la gestión de usuarios (solo para administradores)
+    // AGREGAR AQUI TODAS LAS RUTAS A LAS QUE SOLO PUEDAN ACCEDER LOS ADMINISTRADORES
+    Route::middleware(['auth', 'admin'])->group(function () {
+        Route::get('/usuarios', [UserController::class, 'index'])->name('usuarios.index');
+        Route::get('/usuarios/crear', [UserController::class, 'create'])->name('usuarios.create');
+        Route::post('/usuarios', [UserController::class, 'store'])->name('usuarios.store');
+        Route::get('/usuarios/{id}/editar', [UserController::class, 'edit'])->name('usuarios.edit');
+        Route::put('/usuarios/{id}', [UserController::class, 'update'])->name('usuarios.update');
+        Route::delete('/usuarios/{id}', [UserController::class, 'destroy'])->name('usuarios.destroy');
+    });
 
 });
