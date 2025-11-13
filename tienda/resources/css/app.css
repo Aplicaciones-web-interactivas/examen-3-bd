@@ -37,11 +37,12 @@
     --color-surface: #FFFFFF; /* Blanco */
 
     /* helper content/foreground vars */
-    --color-accent-content: #FFFFFF;
+    --color-accent-content: #FFFFFF; /* Marca texto sobre fondos de acento */
     --color-accent-foreground: var(--color-text);
 }
 
 @layer theme {
+    /* Modos claro y oscuro */
     .dark {
         --color-accent: var(--color-white);
         --color-accent-content: var(--color-white);
