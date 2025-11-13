@@ -22,7 +22,7 @@ class ProductoController extends Controller
             $productos = \App\Models\Producto::all();
         }
         $imagenes = Imagen::select('id', 'nombre')->orderBy('id')->get();
-        $descuentos = Descuento::select('id','porcentaje')->orderBy('id')->get(); // porcentaje existe según tu modelo
+        $descuentos = Descuento::select('id','porcentaje')->orderBy('id')->get();
 
         return view('producto', compact('productos','imagenes','descuentos'));
     }
@@ -51,7 +51,7 @@ class ProductoController extends Controller
         $producto = Producto::create($validated);
 
         // Si el producto tiene descuento válido, enviar correo a clientes.
-        $descuento = $producto->descuento; // relación belongsTo
+        $descuento = $producto->descuento;
         if ($descuento && $descuento->estaActivo()) {
             User::where('rol', 'cliente')
                 ->select('id','email')
@@ -85,7 +85,7 @@ class ProductoController extends Controller
 
         $producto->update($validated);
 
-        // Si se cambió descuento y ahora tiene uno activo, notificar (opcional)
+        // Si se cambió descuento y ahora tiene uno activo, enviar correo a clientes.
         if (array_key_exists('descuento_id', $validated)) {
             $producto->load('descuento');
             $descuento = $producto->descuento;
