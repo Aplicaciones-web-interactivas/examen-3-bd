@@ -10,15 +10,18 @@ use App\Models\Descuento;
 use Illuminate\Support\Facades\Mail;
 use App\Models\User;
 use App\Mail\Descuentos as ProductoDescuentoMailable;
+use Maatwebsite\Excel\Facades\Excel;
+
+
 
 class ProductoController extends Controller
 {
     public function index(Request $request)
     {
-        //este es in filtro para buscar por nombre 
+        //este es in filtro para buscar por nombre
         if ($request->filled('nombre')) {
             $productos = \App\Models\Producto::where('nombre', 'like', '%'.$request->nombre.'%')->get();
-        } else { //si no lo encuientra te muestra todos 
+        } else { //si no lo encuientra te muestra todos
             $productos = \App\Models\Producto::all();
         }
         $imagenes = Imagen::select('id', 'nombre')->orderBy('id')->get();
@@ -116,5 +119,20 @@ class ProductoController extends Controller
         return redirect()
             ->route('productos.index')
             ->with('status', 'Producto eliminado');
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,csv',
+        ]);
+
+        $file = $request->file('file');
+
+        Excel::import(new \App\Imports\ProductoImport, $file);
+
+        return redirect()
+            ->route('productos.index')
+            ->with('status', 'Productos importados correctamente');
     }
 }

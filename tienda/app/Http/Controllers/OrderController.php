@@ -19,6 +19,11 @@ class OrderController extends Controller
     //funciones para el carrito jejej
     public function checkout(Request $request)
     {
+        // Validación básica (para futuros campos)
+        $request->validate([
+            'terms_accepted' => 'sometimes|accepted',
+        ]);
+
         try {
             DB::beginTransaction();
 
