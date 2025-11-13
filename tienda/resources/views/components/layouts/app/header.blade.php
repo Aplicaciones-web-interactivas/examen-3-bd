@@ -4,7 +4,7 @@
         @include('partials.head')
     </head>
     <body class="min-h-screen bg-white dark:bg-white" style="--color-accent-content: #4472CA;">
-        <flux:header container class="border-b border-zinc-200 bg-white dark:bg-white py-8">
+        <flux:header container class="border-b border-zinc-200 py-4 items-center" style="background:var(--color-info);">
             <flux:sidebar.toggle class="lg:hidden size-12 text-[#4472CA]" icon="bars-2" inset="left" />
 
             <a href="{{ route('dashboard') }}" class="ms-2 me-5 flex items-center space-x-5 rtl:space-x-reverse lg:ms-0" wire:navigate>
@@ -15,9 +15,9 @@
                 />
             </a>
 
-            <flux:navbar class="-mb-px max-lg:hidden gap-8 text-[#4472CA] text-2xl font-semibold">
+            <flux:navbar class="-mb-px max-lg:hidden gap-8 text-[#FFE66D] text-2xl font-semibold">
                 <flux:navbar.item
-                    class="!text-[#4472CA] text-2xl font-semibold flex items-center gap-3 [&_svg]:size-7"
+                    class="!text-[#FFE66D] text-2xl font-semibold flex items-center gap-3 [&_svg]:size-7"
                     icon="layout-grid"
                     :href="route('dashboard')"
                     :current="request()->routeIs('dashboard')"
@@ -27,7 +27,7 @@
                 </flux:navbar.item>
 
                 <flux:navbar.item
-                    class="!text-[#4472CA] text-2xl font-semibold flex items-center gap-3 [&_svg]:size-7"
+                    class="!text-[#FFE66D] text-2xl font-semibold flex items-center gap-3 [&_svg]:size-7"
                     icon="shopping-cart"
                     :href="route('productos.index')"
                     :current="request()->routeIs('productos.*')"
@@ -39,7 +39,7 @@
                 @auth
                     @if(auth()->user()->rol === 'admin')
                         <flux:navbar.item
-                            class="!text-[#4472CA] text-2xl font-semibold flex items-center gap-3 [&_svg]:size-7"
+                            class="!text-[#FFE66D] text-2xl font-semibold flex items-center gap-3 [&_svg]:size-7"
                             icon="users"
                             :href="route('usuarios.index')"
                             :current="request()->routeIs('usuarios.*')"
@@ -49,15 +49,19 @@
                         </flux:navbar.item>
                     @endif
                 @endauth
-
             </flux:navbar>
 
             <flux:spacer />
 
             <!-- Desktop User Menu -->
-            <flux:dropdown position="top" align="end" class="text-[#4472CA]" style="--color-accent-content: #4472CA;">
+            <flux:dropdown
+                position="top"
+                align="end"
+                class="text-accent-light"
+                style="--color-accent-content: var(--color-accent-light);"
+            >
                 <flux:profile
-                    class="cursor-pointer text-2xl text-[#4472CA]"
+                    class="cursor-pointer text-2xl text-accent-light"
                     :initials="auth()->user()->initials()"
                 />
 
@@ -74,8 +78,8 @@
                                 </span>
 
                                 <div class="grid flex-1 text-start text-sm leading-tight">
-                                    <span class="truncate font-semibold">{{ auth()->user()->name }}</span>
-                                    <span class="truncate text-xs">{{ auth()->user()->email }}</span>
+                                    <span class="truncate font-semibold text-accent-light">{{ auth()->user()->name }}</span>
+                                    <span class="truncate text-xs text-accent-light">{{ auth()->user()->email }}</span>
                                 </div>
                             </div>
                         </div>
@@ -84,19 +88,32 @@
                     <flux:menu.separator />
 
                     <flux:menu.radio.group>
-                        <flux:menu.item :href="route('profile.edit')" icon="cog" wire:navigate class="!text-[#4472CA]">{{ __('Settings') }}</flux:menu.item>
+                        <flux:menu.item
+                            :href="route('profile.edit')"
+                            icon="cog"
+                            wire:navigate
+                            class="!text-accent-light"
+                        >
+                            {{ __('Settings') }}
+                        </flux:menu.item>
                     </flux:menu.radio.group>
 
                     <flux:menu.separator />
 
                     <form method="POST" action="{{ route('logout') }}" class="w-full">
                         @csrf
-                        <flux:menu.item as="button" type="submit" icon="arrow-right-start-on-rectangle" class="w-full !text-[#4472CA]">
+                        <flux:menu.item
+                            as="button"
+                            type="submit"
+                            icon="arrow-right-start-on-rectangle"
+                            class="w-full !text-accent-light"
+                        >
                             {{ __('Log Out') }}
                         </flux:menu.item>
                     </form>
                 </flux:menu>
             </flux:dropdown>
+
         </flux:header>
 
         <!-- Mobile Menu -->
