@@ -71,7 +71,7 @@ class CartControllerTest extends TestCase
 
         $response->assertStatus(201)
             ->assertJsonPath('status', 'ok')
-            ->assertJsonPath('data.total', 160); // 2 * 80 (puede venir como int)
+            ->assertJsonPath('data.total', 160); // 2 * 80 
 
         $this->assertDatabaseHas('detalle_carritos', [
             'producto_id' => $product->id,
@@ -84,7 +84,7 @@ class CartControllerTest extends TestCase
     {
         $user = User::factory()->create();
         $this->actingAs($user);
-        $product = $this->makeProduct(precio: 50, stock: 3); // precio_final 40
+        $product = $this->makeProduct(precio: 50, stock: 3); 
         // add 1
         $this->post('/cart/add', ['producto_id' => $product->id, 'cantidad' => 1])->assertStatus(201);
         $carrito = Carrito::where('user_id', $user->id)->first();
@@ -112,7 +112,6 @@ class CartControllerTest extends TestCase
             ->assertJsonPath('status', 'ok');
         $this->assertSoftDeleted('detalle_carritos', ['id' => $detalle->id]);
 
-        // clear cart (should be already empty but endpoint should work)
         $this->delete('/cart/clear')
             ->assertStatus(200)
             ->assertJsonPath('status', 'ok');
@@ -132,6 +131,6 @@ class CartControllerTest extends TestCase
         $resp = $this->get('/cart/preview');
         $resp->assertStatus(200)
             ->assertJsonPath('status', 'ok')
-            ->assertJsonPath('data.total_preview', 200); // 2*80 + 1*40 (puede venir como int)
+            ->assertJsonPath('data.total_preview', 200); // 2*80 + 1*40 
     }
 }
