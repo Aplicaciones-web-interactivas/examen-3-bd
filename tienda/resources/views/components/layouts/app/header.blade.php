@@ -29,7 +29,7 @@
                 <flux:navbar.item
                     class="!text-[#4472CA] text-2xl font-semibold flex items-center gap-3 [&_svg]:size-7"
                     icon="shopping-cart"
-                    :href="route('productos.index')"
+                    :href="route('productos-admin.index')"
                     :current="request()->routeIs('productos.*')"
                     wire:navigate
                 >
