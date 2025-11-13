@@ -44,6 +44,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/', [OrderController::class, 'index'])->name('index');
         Route::post('/checkout', [OrderController::class, 'checkout'])->name('checkout');
         Route::get('/{id}', [OrderController::class, 'show'])->name('show');
+        Route::get('/{id}/ticket', [OrderController::class, 'ticket'])->name('ticket');
     });
 
     // Cart routes - Cliente

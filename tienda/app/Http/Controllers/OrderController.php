@@ -10,6 +10,9 @@ use App\Models\Producto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 class OrderController extends Controller
 {
@@ -69,6 +72,26 @@ class OrderController extends Controller
             $carrito->delete();
 
             DB::commit();
+
+            // Generar ticket PDF después de confirmar la transacción (no bloqueante)
+            try {
+                $compra->loadMissing(['detalles.producto', 'user']);
+                $html = view('orders.ticket', ['compra' => $compra])->render();
+
+                $options = new Options();
+                $options->set('isRemoteEnabled', true);
+                $options->set('defaultFont', 'DejaVu Sans');
+                $dompdf = new Dompdf($options);
+                $dompdf->loadHtml($html, 'UTF-8');
+                $dompdf->setPaper('A4', 'portrait');
+                $dompdf->render();
+                $pdfOutput = $dompdf->output();
+
+                $path = "tickets/ticket_{$compra->id}.pdf";
+                Storage::put($path, $pdfOutput);
+            } catch (\Throwable $e) {
+                // log error si es necesario, pero no bloquear el flujo
+            }
 
             return redirect()->route('orders.show', $compra->id)
                 ->with('success', 'Compra realizada exitosamente');
@@ -142,10 +165,44 @@ class OrderController extends Controller
         $compra = Compra::with(['detalles.producto.imagen', 'user'])
             ->findOrFail($id);
 
-        if ($compra->user_id !== $user->id && !$user->is_admin) {
+        if ($compra->user_id !== $user->id && ($user->rol ?? null) !== 'admin') {
             abort(403, 'No tienes permiso para ver esta compra');
         }
 
         return view('orders.show', compact('compra'));
+    }
+
+    /**
+     * Descargar o ver el ticket PDF de una compra.
+     */
+    public function ticket($id)
+    {
+        $user = Auth::user();
+        $compra = Compra::with(['detalles.producto', 'user'])->findOrFail($id);
+
+        if ($compra->user_id !== $user->id && ($user->rol ?? null) !== 'admin') {
+            abort(403, 'No tienes permiso para descargar este ticket');
+        }
+
+        $relativePath = "tickets/ticket_{$compra->id}.pdf";
+        if (Storage::exists($relativePath)) {
+            return Storage::download($relativePath, "ticket_{$compra->id}.pdf");
+        }
+
+        // Generar al vuelo si no existe
+        $html = view('orders.ticket', ['compra' => $compra])->render();
+        $options = new Options();
+        $options->set('isRemoteEnabled', true);
+        $options->set('defaultFont', 'DejaVu Sans');
+        $dompdf = new Dompdf($options);
+        $dompdf->loadHtml($html, 'UTF-8');
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+        $output = $dompdf->output();
+
+        return response($output, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="ticket_' . $compra->id . '.pdf"',
+        ]);
     }
 }
