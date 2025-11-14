@@ -3,8 +3,8 @@
     <head>
         @include('partials.head')
     </head>
-    <body class="min-h-screen bg-white dark:bg-white" style="--color-zinc-100: #f5f5f5;">
-        <flux:header container class="border-b border-zinc-200 bg-red-600 dark:bg-red-600 py-8">
+    <body class="min-h-screen bg-white dark:bg-white flex flex-col" style="--color-zinc-100: #f5f5f5;">
+        <flux:header container class="border-b border-zinc-200 bg-red-600 dark:bg-red-600 py-8 sticky top-0 inset-x-0 z-50 w-full shadow-lg">
             <flux:sidebar.toggle class="lg:hidden size-12 text-[#f5f5f5]" icon="bars-2" inset="left" />
 
             <a href="{{ route('dashboard') }}" class="ms-2 me-5 flex items-center space-x-5 rtl:space-x-reverse lg:ms-0" wire:navigate>
@@ -101,11 +101,11 @@
             <flux:dropdown
                 position="top"
                 align="end"
-                class="text-white"
+                class="text-red-600"
                 style="--color-accent-content: var(--color-accent-light);"
             >
                 <flux:profile
-                    class="cursor-pointer text-2xl text-white"
+                    class="cursor-pointer text-2xl text-red-600"
                     :initials="auth()->user()->initials()"
                 />
 
@@ -122,8 +122,8 @@
                                 </span>
 
                                 <div class="grid flex-1 text-start text-sm leading-tight">
-                                    <span class="truncate font-semibold text-white">{{ auth()->user()->name }}</span>
-                                    <span class="truncate text-xs text-white">{{ auth()->user()->email }}</span>
+                                    <span class="truncate font-semibold text-red-600">{{ auth()->user()->name }}</span>
+                                    <span class="truncate text-xs text-red-600">{{ auth()->user()->email }}</span>
                                 </div>
                             </div>
                         </div>
@@ -136,7 +136,7 @@
                             :href="route('profile.edit')"
                             icon="cog"
                             wire:navigate
-                            class="!text-white"
+                            class="!text-red-600"
                         >
                             {{ __('Settings') }}
                         </flux:menu.item>
@@ -150,7 +150,7 @@
                             as="button"
                             type="submit"
                             icon="arrow-right-start-on-rectangle"
-                            class="w-full !text-white"
+                            class="w-full !text-red-600"
                         >
                             {{ __('Log Out') }}
                         </flux:menu.item>
@@ -256,7 +256,17 @@
             </flux:navlist>
         </flux:sidebar>
 
-        {{ $slot }}
+        <main class="flex-1 w-full pb-32 lg:pb-40">
+            {{ $slot }}
+        </main>
+
+        <footer class="bg-red-600 text-white py-8 w-full fixed bottom-0 inset-x-0 z-40 shadow-lg">
+            <div class="max-w-6xl mx-auto px-6 text-center space-y-1">
+                <p class="text-xl font-semibold">Tienda Buen Fin</p>
+                <p class="text-sm">Direccion: Av. Comercio 123, Col. Centro, Ciudad de Mexico.</p>
+                <p class="text-sm">Contactos: Tel. (55) 1234 5678 | contacto@tiendabuenfin.mx</p>
+            </div>
+        </footer>
 
         @fluxScripts
     </body>
