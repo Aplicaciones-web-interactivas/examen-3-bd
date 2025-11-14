@@ -63,7 +63,7 @@ class ProductoController extends Controller
 
         return redirect()
             ->route('productos-admin.index')
-            ->with('status', 'Producto creado correctamente');
+            ->with('success', 'Producto creado correctamente');
     }
 
     //De igual ,manera para actualizar el producto
@@ -101,7 +101,7 @@ class ProductoController extends Controller
 
         return redirect()
             ->route('productos-admin.index')
-            ->with('status', 'Producto actualizado');
+            ->with('success', 'Producto actualizado');
     }
 
 
@@ -112,7 +112,7 @@ class ProductoController extends Controller
 
         return redirect()
             ->route('productos-admin.index')
-            ->with('status', 'Producto eliminado');
+            ->with('success', 'Producto eliminado');
     }
 
     public function import(Request $request)
@@ -127,7 +127,7 @@ class ProductoController extends Controller
 
         return redirect()
             ->route('productos-admin.index')
-            ->with('status', 'Productos importados correctamente');
+            ->with('success', 'Productos importados correctamente');
     }
 
     public function index2(Request $request)
