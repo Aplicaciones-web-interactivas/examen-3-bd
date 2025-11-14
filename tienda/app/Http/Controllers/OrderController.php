@@ -153,7 +153,7 @@ class OrderController extends Controller
             ->limit(10)
             ->get();
 
-        return view('orders.finanza', compact(
+        return view('orders.finanzas', compact(
             'compras',
             'totalVentas',
             'totalCompras',
