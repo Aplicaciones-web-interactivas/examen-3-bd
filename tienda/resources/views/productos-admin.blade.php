@@ -4,6 +4,7 @@
         <h1 class="text-2xl font-semibold text-text">Gestión de Productos</h1>
         <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Administración de los productos registrados en el sistema.</p>
     </div>
+    @include('partials.flash')
     <div class="flex items-start justify-between">
         <div class="w-fit bg-surface rounded-md border border-gray-200 dark:border-gray-700 p-4">
             <form method="GET" action="{{ route('productos-admin.index') }}" class="flex flex-wrap items-end gap-3 md:gap-4">
@@ -32,7 +33,7 @@
                     <th class="px-4 py-2 text-left font-medium text-text">Precio</th>
                     <th class="px-4 py-2 text-left font-medium text-text">Stock</th>
                     <th class="px-4 py-2 text-left font-medium text-text">Imagen</th>
-                    <th class="px-4 py-2 text-left font-medium text-text">Descuento</th>
+                    <th class="px-4 py-2 text-left font-medium text-text">Descuento (%)</th>
                     <th class="px-4 py-2 text-center font-medium text-text">Acciones</th>
                 </tr>
             </thead>
@@ -45,7 +46,7 @@
                         <td class="px-4 py-2 text-sm text-text">${{ $p->precio }}</td>
                         <td class="px-4 py-2 text-sm text-text">{{ $p->stock }}</td>
                         <td class="px-4 py-2 text-sm text-text">{{ optional($p->imagen)->nombre ?? '—' }}</td>
-                        <td class="px-4 py-2 text-sm text-text">{{ $p->descuento?->porcentaje ?? 'N/A' }}</td>
+                        <td class="px-4 py-2 text-sm text-text">{{ $p->descuento?->porcentaje !== null ? $p->descuento->porcentaje . '%' : 'N/A' }}</td>
                         <td class="px-4 py-2 text-center">
                             <div class="flex items-center justify-center gap-2">
                                 <button onclick="abrirModalEditar({{ $p->id }}, '{{ $p->nombre }}', '{{ $p->descripcion }}', {{ $p->precio }}, {{ $p->stock }}, {{ $p->imagen_id ?? 'null' }}, {{ $p->descuento_id ?? 'null' }})" class="text-xs font-medium text-brand hover:underline cursor-pointer">Editar</button>
@@ -122,7 +123,7 @@
             <h3 class="text-lg font-semibold text-brand mb-4 text-center">Importar productos desde Excel</h3>
             <form action="{{ route('productos.import') }}" method="POST" enctype="multipart/form-data" class="space-y-4" id="formImportarProductos">
                 @csrf
-                <input type="file" name="archivo" accept=".xlsx,.xls,.csv" required class="w-full text-sm file:mr-3 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-white file:bg-blue-800 hover:file:bg-blue-900 bg-blue-100 text-blue-900 rounded-md cursor-pointer focus:outline-none focus:ring-1 focus:ring-blue-800"/>
+                <input type="file" name="file" accept=".xlsx,.xls,.csv" required class="w-full text-sm file:mr-3 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-white file:bg-blue-800 hover:file:bg-blue-900 bg-blue-100 text-blue-900 rounded-md cursor-pointer focus:outline-none focus:ring-1 focus:ring-blue-800"/>
                 <div class="flex justify-end gap-2 pt-2">
                     <button type="button" onclick="cerrarModalImportar()" class="rounded-md border border-gray-300 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700 cursor-pointer" id="btnCancelarImportar">Cancelar</button>
                     <button type="submit" class="rounded-md bg-brand px-3 py-1.5 text-sm font-medium text-white hover:brightness-110 flex items-center gap-2 cursor-pointer" id="btnImportar">
