@@ -174,7 +174,7 @@ class OrderController extends Controller
             abort(403, 'No tienes permiso para ver esta compra');
         }
 
-        return view('orders.show', compact('compra'));
+        return view('orders.showTicket', compact('compra'));
     }
 
     /**
