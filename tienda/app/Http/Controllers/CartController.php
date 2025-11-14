@@ -48,7 +48,6 @@ class CartController extends Controller
 
 		$producto = Producto::findOrFail($validated['producto_id']);
 
-		// Validar stock disponible considerando lo que ya está en el carrito
 		$detalleExistente = $carrito->detalles()->where('producto_id', $producto->id)->first();
 		$nuevaCantidad = $validated['cantidad'] + ($detalleExistente?->cantidad ?? 0);
 		if ($nuevaCantidad > $producto->stock) {
@@ -59,7 +58,7 @@ class CartController extends Controller
 		}
 
 		DB::transaction(function () use ($detalleExistente, $carrito, $producto, $nuevaCantidad, $validated) {
-			$precioUnitario = $producto->precio_final; // usa accessor con descuento
+			$precioUnitario = $producto->precio_final;
 			if ($detalleExistente) {
 				$detalleExistente->cantidad = $nuevaCantidad;
 				$detalleExistente->subtotal = $nuevaCantidad * $precioUnitario;
@@ -77,15 +76,14 @@ class CartController extends Controller
 		$carrito->load('detalles.producto.descuento');
 
 		if ($request->expectsJson()) {
-        return response()->json([
-            'status'  => 'ok',
-            'message' => 'Producto agregado al carrito',
-            'data'    => $this->serializeCart($carrito),
-        ], 201);
-    }
+			return response()->json([
+				'status'  => 'ok',
+				'message' => 'Producto agregado al carrito',
+				'data'    => $this->serializeCart($carrito),
+			], 201);
+		}
 
-    return back()->with('status', 'Producto agregado al carrito');
-		
+		return back()->with('status', 'Producto agregado al carrito');
 	}
 
 	/**
@@ -98,28 +96,37 @@ class CartController extends Controller
 		]);
 
 		$user = Auth::user();
-	$carrito = Carrito::where('user_id', $user->id)->first();
+		$carrito = Carrito::where('user_id', $user->id)->first();
 		if (!$carrito) {
-			return response()->json([
-				'status' => 'error',
-				'message' => 'Carrito no existe',
-			], 404);
+			if ($request->expectsJson()) {
+				return response()->json([
+					'status' => 'error',
+					'message' => 'Carrito no existe',
+				], 404);
+			}
+			return redirect()->route('cart.index')->with('error', 'Carrito no existe');
 		}
 
 		$detalle = $carrito->detalles()->where('id', $id)->first();
 		if (!$detalle) {
-			return response()->json([
-				'status' => 'error',
-				'message' => 'Item no encontrado en el carrito',
-			], 404);
+			if ($request->expectsJson()) {
+				return response()->json([
+					'status' => 'error',
+					'message' => 'Item no encontrado en el carrito',
+				], 404);
+			}
+			return redirect()->route('cart.index')->with('error', 'Item no encontrado en el carrito');
 		}
 
 		$producto = $detalle->producto;
 		if ($validated['cantidad'] > $producto->stock) {
-			return response()->json([
-				'status' => 'error',
-				'message' => 'Stock insuficiente para la cantidad solicitada',
-			], 422);
+			if ($request->expectsJson()) {
+				return response()->json([
+					'status' => 'error',
+					'message' => 'Stock insuficiente para la cantidad solicitada',
+				], 422);
+			}
+			return redirect()->route('cart.index')->with('error', 'Stock insuficiente para la cantidad solicitada');
 		}
 
 		DB::transaction(function () use ($detalle, $producto, $validated, $carrito) {
@@ -130,11 +137,16 @@ class CartController extends Controller
 		});
 
 		$carrito->load('detalles.producto.descuento');
-		return response()->json([
-			'status' => 'ok',
-			'message' => 'Item actualizado',
-			'data' => $this->serializeCart($carrito),
-		]);
+
+		if ($request->expectsJson()) {
+			return response()->json([
+				'status' => 'ok',
+				'message' => 'Item actualizado',
+				'data' => $this->serializeCart($carrito),
+			]);
+		}
+
+		return redirect()->route('cart.index')->with('status', 'Cantidad actualizada');
 	}
 
 	/**
@@ -143,19 +155,26 @@ class CartController extends Controller
 	public function removeItem($id)
 	{
 		$user = Auth::user();
-	$carrito = Carrito::where('user_id', $user->id)->first();
+		$carrito = Carrito::where('user_id', $user->id)->first();
 		if (!$carrito) {
-			return response()->json([
-				'status' => 'error',
-				'message' => 'Carrito no existe',
-			], 404);
+			if (request()->expectsJson()) {
+				return response()->json([
+					'status' => 'error',
+					'message' => 'Carrito no existe',
+				], 404);
+			}
+			return redirect()->route('cart.index')->with('error', 'Carrito no existe');
 		}
+
 		$detalle = $carrito->detalles()->where('id', $id)->first();
 		if (!$detalle) {
-			return response()->json([
-				'status' => 'error',
-				'message' => 'Item no encontrado',
-			], 404);
+			if (request()->expectsJson()) {
+				return response()->json([
+					'status' => 'error',
+					'message' => 'Item no encontrado',
+				], 404);
+			}
+			return redirect()->route('cart.index')->with('error', 'Item no encontrado');
 		}
 
 		DB::transaction(function () use ($detalle, $carrito) {
@@ -164,11 +183,16 @@ class CartController extends Controller
 		});
 
 		$carrito->load('detalles.producto.descuento');
-		return response()->json([
-			'status' => 'ok',
-			'message' => 'Item eliminado',
-			'data' => $this->serializeCart($carrito),
-		]);
+
+		if (request()->expectsJson()) {
+			return response()->json([
+				'status' => 'ok',
+				'message' => 'Item eliminado',
+				'data' => $this->serializeCart($carrito),
+			]);
+		}
+
+		return redirect()->route('cart.index')->with('status', 'Producto eliminado del carrito');
 	}
 
 	/**
@@ -177,12 +201,15 @@ class CartController extends Controller
 	public function clearCart()
 	{
 		$user = Auth::user();
-	$carrito = Carrito::where('user_id', $user->id)->first();
+		$carrito = Carrito::where('user_id', $user->id)->first();
 		if (!$carrito) {
-			return response()->json([
-				'status' => 'error',
-				'message' => 'Carrito no existe',
-			], 404);
+			if (request()->expectsJson()) {
+				return response()->json([
+					'status' => 'error',
+					'message' => 'Carrito no existe',
+				], 404);
+			}
+			return redirect()->route('cart.index')->with('error', 'Carrito no existe');
 		}
 
 		DB::transaction(function () use ($carrito) {
@@ -191,11 +218,15 @@ class CartController extends Controller
 			$carrito->save();
 		});
 
-		return response()->json([
-			'status' => 'ok',
-			'message' => 'Carrito vaciado',
-			'data' => $this->serializeCart($carrito->fresh()),
-		]);
+		if (request()->expectsJson()) {
+			return response()->json([
+				'status' => 'ok',
+				'message' => 'Carrito vaciado',
+				'data' => $this->serializeCart($carrito->fresh()),
+			]);
+		}
+
+		return redirect()->route('cart.index')->with('status', 'Carrito vaciado');
 	}
 
 	/**
@@ -204,7 +235,7 @@ class CartController extends Controller
 	public function checkoutPreview()
 	{
 		$user = Auth::user();
-	$carrito = Carrito::where('user_id', $user->id)->first();
+		$carrito = Carrito::where('user_id', $user->id)->first();
 		if (!$carrito) {
 			return response()->json([
 				'status' => 'error',
@@ -244,6 +275,19 @@ class CartController extends Controller
 	}
 
 	/**
+	 * Muestra la vista del carrito
+	 */
+	public function index()
+	{
+		$user = Auth::user();
+		$carrito = Carrito::where('user_id', $user->id)
+			->with(['detalles.producto.imagen', 'detalles.producto.descuento'])
+			->first();
+
+		return view('cart.index', compact('carrito'));
+	}
+
+	/**
 	 * Recalcula el total del carrito basándose en los subtotales de los detalles
 	 */
 	private function recalcularTotal(Carrito $carrito): void
@@ -279,4 +323,3 @@ class CartController extends Controller
 		];
 	}
 }
-

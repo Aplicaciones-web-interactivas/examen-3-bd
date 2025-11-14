@@ -26,18 +26,26 @@
                     {{ __('Dashboard') }}
                 </flux:navbar.item>
 
-                <flux:navbar.item
-                    class="!text-white text-2xl font-semibold flex items-center gap-3 [&_svg]:size-7"
-                    icon="shopping-cart"
-                    :href="route('productos-admin.index')"
-                    :current="request()->routeIs('productos.*')"
-                    wire:navigate
-                >
-                    {{ __('Productos') }}
-                </flux:navbar.item>
-
                 @auth
                     @if(auth()->user()->rol === 'admin')
+                        <flux:navbar.item
+                            class="!text-white text-2xl font-semibold flex items-center gap-3 [&_svg]:size-7"
+                            icon="shopping-cart"
+                            :href="route('productos-admin.index')"
+                            :current="request()->routeIs('productos-admin.*')"
+                            wire:navigate
+                        >
+                            {{ __('Productos') }}
+                        </flux:navbar.item>
+                        <flux:navbar.item
+                            class="!text-white text-2xl font-semibold flex items-center gap-3 [&_svg]:size-7"
+                            icon="percent-badge"
+                            :href="route('admin.descuentos')"
+                            :current="request()->routeIs('admin.descuentos')"
+                            wire:navigate
+                        >
+                            {{ __('Descuentos') }}
+                        </flux:navbar.item>
                         <flux:navbar.item
                             class="!text-white text-2xl font-semibold flex items-center gap-3 [&_svg]:size-7"
                             icon="users"
@@ -47,23 +55,49 @@
                         >
                             {{ __('Gestión de Usuarios') }}
                         </flux:navbar.item>
+                    @else
+                        <flux:navbar.item
+                            class="!text-white text-2xl font-semibold flex items-center gap-3 [&_svg]:size-7"
+                            icon="shopping-cart"
+                            :href="route('productos.catalogo')"
+                            :current="request()->routeIs('productos.catalogo')"
+                            wire:navigate
+                        >
+                            {{ __('Productos') }}
+                        </flux:navbar.item>
                     @endif
                 @endauth
-
-                 <flux:navlist.item
-                class="!text-white text-2xl font-semibold items-center gap-3 [&_svg]:size-7"
-                icon="percent-badge" 
-                :href="route('productos.descuento')"
-                :current="request()->routeIs('productos.descuento')"
-                wire:navigate
-            >
-                {{ __('Descuentos') }}
-            </flux:navlist.item>
             </flux:navbar>
 
             <flux:spacer />
 
-            <!-- Desktop User Menu -->
+            @auth
+                @if(auth()->user()->rol === 'cliente')
+                    <flux:navbar class="-mb-px max-lg:hidden gap-4 text-white text-2xl font-semibold">
+                        <flux:navbar.item
+                            class="!text-white text-2xl font-semibold flex items-center gap-3 [&_svg]:size-7"
+                            icon="percent-badge" 
+                            :href="route('productos.descuento')"
+                            :current="request()->routeIs('productos.descuento')"
+                            wire:navigate
+                        >
+                            {{ __('Descuentos') }}
+                        </flux:navbar.item>
+                        <flux:navbar.item
+                            class="!text-white text-2xl font-semibold flex items-center gap-3 [&_svg]:size-7"
+                            icon="shopping-cart"
+                            :href="route('cart.index')"
+                            :current="request()->routeIs('cart.index')"
+                            wire:navigate
+                        >
+                            {{ __('Carrito') }}
+                        </flux:navbar.item>
+                    </flux:navbar>
+                @endif
+            @endauth
+
+            <flux:spacer />
+
             <flux:dropdown
                 position="top"
                 align="end"
@@ -126,7 +160,6 @@
 
         </flux:header>
 
-        <!-- Mobile Menu -->
         <flux:sidebar stashable sticky class="lg:hidden border-e border-zinc-200 bg-white dark:border-zinc-200 dark:bg-white">
             <flux:sidebar.toggle class="lg:hidden size-12 text-white" icon="x-mark" />
 
@@ -148,38 +181,66 @@
                 >
                     {{ __('Dashboard') }}
                 </flux:navlist.item>
-                <flux:navlist.item
-                    class="!text-red-600 text-2xl font-semibold [&_svg]:size-7"
-                    icon="shopping-cart"
-                    :href="route('productos.index')"
-                    :current="request()->routeIs('productos.*')"
-                    wire:navigate
-                >
-                    {{ __('Productos') }}
-                </flux:navlist.item>
-                    @auth
-                        @if(auth()->user()->rol === 'admin')
-                            <flux:navlist.item
-                                class="!text-red-600 text-2xl font-semibold [&_svg]:size-7"
-                                icon="users"
-                                :href="route('usuarios.index')"
-                                :current="request()->routeIs('usuarios.*')"
-                                wire:navigate
-                            >
-                                {{ __('Gestión de Usuarios') }}
-                            </flux:navlist.item>
-                        @endif
-                    @endauth
-            <flux:navlist.item
-                class="!text-red-600 text-2xl font-semibold [&_svg]:size-7"
-                icon="percent-badge" 
-                :href="route('productos.descuento')"
-                :current="request()->routeIs('productos.descuento')"
-                wire:navigate
-            >
-                {{ __('Descuentos') }}
-            </flux:navlist.item>
 
+                @auth
+                    @if(auth()->user()->rol === 'admin')
+                        <flux:navlist.item
+                            class="!text-red-600 text-2xl font-semibold [&_svg]:size-7"
+                            icon="shopping-cart"
+                            :href="route('productos-admin.index')"
+                            :current="request()->routeIs('productos-admin.*')"
+                            wire:navigate
+                        >
+                            {{ __('Productos') }}
+                        </flux:navlist.item>
+                        <flux:navlist.item
+                            class="!text-red-600 text-2xl font-semibold [&_svg]:size-7"
+                            icon="percent-badge"
+                            :href="route('admin.descuentos')"
+                            :current="request()->routeIs('admin.descuentos')"
+                            wire:navigate
+                        >
+                            {{ __('Descuentos') }}
+                        </flux:navlist.item>
+                        <flux:navlist.item
+                            class="!text-red-600 text-2xl font-semibold [&_svg]:size-7"
+                            icon="users"
+                            :href="route('usuarios.index')"
+                            :current="request()->routeIs('usuarios.*')"
+                            wire:navigate
+                        >
+                            {{ __('Gestión de Usuarios') }}
+                        </flux:navlist.item>
+                    @else
+                        <flux:navlist.item
+                            class="!text-red-600 text-2xl font-semibold [&_svg]:size-7"
+                            icon="shopping-cart"
+                            :href="route('productos.catalogo')"
+                            :current="request()->routeIs('productos.catalogo')"
+                            wire:navigate
+                        >
+                            {{ __('Productos') }}
+                        </flux:navlist.item>
+                        <flux:navlist.item
+                            class="!text-red-600 text-2xl font-semibold [&_svg]:size-7"
+                            icon="percent-badge" 
+                            :href="route('productos.descuento')"
+                            :current="request()->routeIs('productos.descuento')"
+                            wire:navigate
+                        >
+                            {{ __('Descuentos') }}
+                        </flux:navlist.item>
+                        <flux:navlist.item
+                            class="!text-red-600 text-2xl font-semibold [&_svg]:size-7"
+                            icon="shopping-cart"
+                            :href="route('cart.index')"
+                            :current="request()->routeIs('cart.index')"
+                            wire:navigate
+                        >
+                            {{ __('Mi Carrito') }}
+                        </flux:navlist.item>
+                    @endif
+                @endauth
             </flux:navlist>
 
             <flux:spacer />

@@ -158,5 +158,15 @@ class ProductoController extends Controller
     return view('descuentos', compact('productos'));
     }
 
+       
+    public function catalogo()
+    {
+        $productos = Producto::with(['imagen', 'descuento'])
+            ->where('stock', '>', 0)
+            ->get();
+        
+        return view('productos.catalogo', compact('productos'));
+    }
+
 
 }
