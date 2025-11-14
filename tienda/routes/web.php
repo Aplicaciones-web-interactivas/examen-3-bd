@@ -62,8 +62,11 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/preview', [CartController::class, 'checkoutPreview'])->name('preview');
     });
 
+    Route::get('catalogo', [ProductoController::class, 'index'])
+        ->name('productos.catalogo');
+
     Route::get('productos/descuento', [ProductoController::class, 'productosEnDescuento'])
-    ->name('productos.descuento');
+        ->name('productos.descuento');
 
     // Rutas para Producto (solo admin para crear/editar/etc)
     Route::middleware('admin')->group(function () {
