@@ -12,7 +12,9 @@ use App\Http\Controllers\DescuentoController;
 use App\Http\Controllers\ImagenController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\TicketController;
 
+Route::get('tienda', [ProductoController::class, 'catalogo'])->name('productos.catalogo');
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
@@ -47,14 +49,15 @@ Route::middleware(['auth'])->group(function () {
     // Orders routes - Cliente
     Route::prefix('orders')->name('orders.')->group(function () {
         Route::get('/', [OrderController::class, 'index'])->name('index');
-        Route::post('/checkout', [OrderController::class, 'checkout'])->name('checkout');
+        Route::post('/checkout', [TicketController::class, 'generarTicket'])->name('checkout');
         Route::get('/{id}', [OrderController::class, 'show'])->name('show');
         Route::get('/{id}/ticket', [OrderController::class, 'ticket'])->name('ticket');
     });
 
     // Cart routes - Cliente
     Route::prefix('cart')->name('cart.')->group(function () {
-        Route::get('/', [CartController::class, 'getCart'])->name('get');
+        Route::get('/', [CartController::class, 'index'])->name('index');
+        Route::get('/data', [CartController::class, 'getCart'])->name('get');
         Route::post('/add', [CartController::class, 'addItem'])->name('add');
         Route::put('/item/{id}', [CartController::class, 'updateItem'])->name('update');
         Route::delete('/item/{id}', [CartController::class, 'removeItem'])->name('remove');
@@ -71,10 +74,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('productos', [ProductoController::class, 'index'])->name('productos.index');
         Route::get('productos/{id}', [ProductoController::class, 'show'])->name('productos.show');
         Route::post('productos', [ProductoController::class, 'store'])->name('productos.store');
-    Route::put('productos/{id}', [ProductoController::class, 'update'])->name('productos.update');
-    Route::delete('productos/{id}', [ProductoController::class, 'destroy'])->name('productos.destroy');
-    Route::post('productos/import', [ProductoController::class, 'import'])->name('productos.import');
-    Route::get('productos-admin', [ProductoController::class, 'index2'])->name('productos-admin.index');
+        Route::put('productos/{id}', [ProductoController::class, 'update'])->name('productos.update');
+        Route::delete('productos/{id}', [ProductoController::class, 'destroy'])->name('productos.destroy');
+        Route::post('productos/import', [ProductoController::class, 'import'])->name('productos.import');
+        Route::get('productos-admin', [ProductoController::class, 'index2'])->name('productos-admin.index');
 
         Route::post('productos', [ProductoController::class, 'store'])->name('productos.store');
         Route::put('productos/{id}', [ProductoController::class, 'update'])->name('productos.update');
