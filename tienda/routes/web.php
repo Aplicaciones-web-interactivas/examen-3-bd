@@ -14,7 +14,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\TicketController;
 
-Route::get('tienda', [ProductoController::class, 'catalogo'])->name('productos.catalogo');
+Route::get('tienda', [ProductoController::class, 'index'])->name('productos.catalogo');
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
