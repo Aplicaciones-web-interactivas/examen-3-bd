@@ -16,16 +16,7 @@
             </a>
 
             <flux:navbar class="-mb-px max-lg:hidden gap-8 text-white text-2xl font-semibold">
-                <flux:navbar.item
-                    class="!text-white text-2xl font-semibold flex items-center gap-3 [&_svg]:size-7"
-                    icon="layout-grid"
-                    :href="route('dashboard')"
-                    :current="request()->routeIs('dashboard')"
-                    wire:navigate
-                >
-                    {{ __('Dashboard') }}
-                </flux:navbar.item>
-
+               
                 @auth
                     @if(auth()->user()->rol === 'admin')
                         <flux:navbar.item
@@ -181,16 +172,6 @@
             </a>
 
             <flux:navlist variant="outline">
-                <flux:navlist.item
-                    class="!text-red-600 text-2xl font-semibold [&_svg]:size-7"
-                    icon="layout-grid"
-                    :href="route('dashboard')"
-                    :current="request()->routeIs('dashboard')"
-                    wire:navigate
-                >
-                    {{ __('Dashboard') }}
-                </flux:navlist.item>
-
                 @auth
                     @if(auth()->user()->rol === 'admin')
                         <flux:navlist.item

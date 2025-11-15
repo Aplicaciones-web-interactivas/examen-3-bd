@@ -1,5 +1,5 @@
 <x-layouts.app :title="__('Gestión de Usuarios')">
-    <div class="space-y-4">
+    <div class="space-y-4 bg-white text-gray-900 p-4 rounded-md">
         {{--Encabezado simple--}}
         <div class="flex items-center justify-between border-b border-gray-200 pb-3 dark:border-gray-700">
                 <div>
