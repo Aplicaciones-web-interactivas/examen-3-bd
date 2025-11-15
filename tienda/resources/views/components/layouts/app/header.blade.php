@@ -55,6 +55,15 @@
                         >
                             {{ __('Gestión de Usuarios') }}
                         </flux:navbar.item>
+                        <flux:navbar.item
+                            class="!text-white text-2xl font-semibold flex items-center gap-3 [&_svg]:size-7"
+                            icon="banknotes"
+                            :href="route('admin.finanzas')"
+                            :current="request()->routeIs('admin.finanzas')"
+                            wire:navigate
+                        >
+                            {{ __('Finanzas') }}
+                        </flux:navbar.item>
                     @else
                         <flux:navbar.item
                             class="!text-white text-2xl font-semibold flex items-center gap-3 [&_svg]:size-7"
@@ -211,6 +220,15 @@
                         >
                             {{ __('Gestión de Usuarios') }}
                         </flux:navlist.item>
+                        <flux:navlist.item
+                            class="!text-red-600 text-2xl font-semibold [&_svg]:size-7"
+                            icon="banknotes"
+                            :href="route('admin.finanzas')"
+                            :current="request()->routeIs('admin.finanzas')"
+                            wire:navigate
+                        >
+                            {{ __('Finanzas') }}
+                        </flux:navlist.item>
                     @else
                         <flux:navlist.item
                             class="!text-red-600 text-2xl font-semibold [&_svg]:size-7"
@@ -256,11 +274,11 @@
             </flux:navlist>
         </flux:sidebar>
 
-        <main class="flex-1 w-full pb-32 lg:pb-40">
+        <main class="flex-1 w-full">
             {{ $slot }}
         </main>
 
-        <footer class="bg-red-600 text-white py-8 w-full fixed bottom-0 inset-x-0 z-40 shadow-lg">
+        <footer class="bg-red-600 text-white py-8 w-full mt-12">
             <div class="max-w-6xl mx-auto px-6 text-center space-y-1">
                 <p class="text-xl font-semibold">Tienda Buen Fin</p>
                 <p class="text-sm">Direccion: Av. Comercio 123, Col. Centro, Ciudad de Mexico.</p>
