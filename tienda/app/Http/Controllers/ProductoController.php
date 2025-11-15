@@ -123,11 +123,17 @@ class ProductoController extends Controller
 
         $file = $request->file('file');
 
-        Excel::import(new \App\Imports\ProductoImport, $file);
+        try {
+            Excel::import(new \App\Imports\ProductoImport, $file);
 
-        return redirect()
-            ->route('productos-admin.index')
-            ->with('success', 'Productos importados correctamente');
+            return redirect()
+                ->route('productos-admin.index')
+                ->with('success', 'Productos importados correctamente');
+        } catch (\Exception $e) {
+            return redirect()
+                ->route('productos-admin.index')
+                ->with('error', 'Error al importar productos: ' . $e->getMessage());
+        }
     }
 
     public function index2(Request $request)
