@@ -21,6 +21,8 @@
         <div class="flex gap-3 items-start">
             <button onclick="abrirModalCrear()" class="inline-flex items-center gap-1 rounded-md border border-brand px-3 py-1.5 text-sm font-medium text-brand hover:bg-brand hover:text-white transition-colors cursor-pointer">+ Agregar Producto</button>
             <button onclick="abrirModalImportar()" class="inline-flex items-center gap-1 rounded-md border border-brand px-3 py-1.5 text-sm font-medium text-brand hover:bg-brand hover:text-white transition cursor-pointer">Importar productos desde Excel</button>
+            <button onclick="abrirModalImagen()" class="inline-flex items-center gap-1 rounded-md border border-green-600 px-3 py-1.5 text-sm font-medium text-green-600 hover:bg-green-600 hover:text-white transition-colors cursor-pointer">+ Agregar Imagen</button>
+            <button onclick="abrirModalDescuento()" class="inline-flex items-center gap-1 rounded-md border border-purple-600 px-3 py-1.5 text-sm font-medium text-purple-600 hover:bg-purple-600 hover:text-white transition-colors cursor-pointer">+ Agregar Descuento</button>
         </div>
     </div>
     <div class="overflow-x-auto rounded-md border border-gray-200 bg-surface dark:border-gray-700">
@@ -192,6 +194,58 @@
         </div>
     </div>
 
+    <div id="modalImagen" style="display:none" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+        <div class="bg-surface rounded-md border border-gray-200 dark:border-gray-700 w-full max-w-lg p-6">
+            <h3 class="text-lg font-semibold text-text mb-4 text-center">Agregar Imagen</h3>
+            <form method="POST" action="{{ route('imagenes.store') }}" class="space-y-4" id="formCrearImagen">
+                @csrf
+                <div>
+                    <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">Nombre</label>
+                    <input type="text" name="nombre" required class="w-full rounded-md border border-gray-300 px-2 py-1 text-sm focus:border-brand focus:ring-1 focus:ring-brand dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">URL de la Imagen</label>
+                    <input type="url" name="imagen_url" required placeholder="https://ejemplo.com/imagen.jpg" class="w-full rounded-md border border-gray-300 px-2 py-1 text-sm focus:border-brand focus:ring-1 focus:ring-brand dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100">
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="cerrarModalImagen()" class="rounded-md border border-gray-300 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700 cursor-pointer" id="btnCancelarImagen">Cancelar</button>
+                    <button type="submit" class="rounded-md bg-green-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-green-700 cursor-pointer flex items-center gap-2" id="btnGuardarImagen">
+                        <span id="textoGuardarImagen">Guardar</span>
+                        <span id="loaderImagen" class="hidden animate-spin border-2 border-white border-t-transparent rounded-full w-4 h-4"></span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="modalDescuento" style="display:none" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+        <div class="bg-surface rounded-md border border-gray-200 dark:border-gray-700 w-full max-w-lg p-6">
+            <h3 class="text-lg font-semibold text-text mb-4 text-center">Agregar Descuento</h3>
+            <form method="POST" action="{{ route('descuentos.store') }}" class="space-y-4" id="formCrearDescuento">
+                @csrf
+                <div>
+                    <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">Porcentaje (%)</label>
+                    <input type="number" name="porcentaje" required min="1" max="100" step="0.01" placeholder="Ej: 15" class="w-full rounded-md border border-gray-300 px-2 py-1 text-sm focus:border-brand focus:ring-1 focus:ring-brand dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">Fecha de Inicio</label>
+                    <input type="date" name="fecha_inicio" required class="w-full rounded-md border border-gray-300 px-2 py-1 text-sm focus:border-brand focus:ring-1 focus:ring-brand dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-600 dark:text-gray-300">Fecha de Fin</label>
+                    <input type="date" name="fecha_fin" required class="w-full rounded-md border border-gray-300 px-2 py-1 text-sm focus:border-brand focus:ring-1 focus:ring-brand dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100">
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="cerrarModalDescuento()" class="rounded-md border border-gray-300 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700 cursor-pointer" id="btnCancelarDescuento">Cancelar</button>
+                    <button type="submit" class="rounded-md bg-purple-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-purple-700 cursor-pointer flex items-center gap-2" id="btnGuardarDescuento">
+                        <span id="textoGuardarDescuento">Guardar</span>
+                        <span id="loaderDescuento" class="hidden animate-spin border-2 border-white border-t-transparent rounded-full w-4 h-4"></span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
         function abrirModalCrear() { document.getElementById('modalCrear').style.display = 'flex'; }
         function cerrarModalCrear() { document.getElementById('modalCrear').style.display = 'none'; }
@@ -238,6 +292,33 @@
             const texto = document.getElementById('textoGuardarEditar');
             const loader = document.getElementById('loaderEditar');
 
+            btnGuardar.disabled = true;
+            btnCancelar.disabled = true;
+            texto.textContent = "Guardando...";
+            loader.classList.remove('hidden');
+        });
+
+        function abrirModalImagen() { document.getElementById('modalImagen').style.display = 'flex'; }
+        function cerrarModalImagen() { document.getElementById('modalImagen').style.display = 'none'; }
+        function abrirModalDescuento() { document.getElementById('modalDescuento').style.display = 'flex'; }
+        function cerrarModalDescuento() { document.getElementById('modalDescuento').style.display = 'none'; }
+
+        document.getElementById('formCrearImagen').addEventListener('submit', function(e) {
+            const btnGuardar = document.getElementById('btnGuardarImagen');
+            const btnCancelar = document.getElementById('btnCancelarImagen');
+            const texto = document.getElementById('textoGuardarImagen');
+            const loader = document.getElementById('loaderImagen');
+            btnGuardar.disabled = true;
+            btnCancelar.disabled = true;
+            texto.textContent = "Guardando...";
+            loader.classList.remove('hidden');
+        });
+
+        document.getElementById('formCrearDescuento').addEventListener('submit', function(e) {
+            const btnGuardar = document.getElementById('btnGuardarDescuento');
+            const btnCancelar = document.getElementById('btnCancelarDescuento');
+            const texto = document.getElementById('textoGuardarDescuento');
+            const loader = document.getElementById('loaderDescuento');
             btnGuardar.disabled = true;
             btnCancelar.disabled = true;
             texto.textContent = "Guardando...";
